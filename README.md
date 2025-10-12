@@ -2,6 +2,12 @@
 
 A comprehensive web application that demonstrates how artificial intelligence can revolutionize fashion sustainability through design generation, sustainability scoring, and demand prediction.
 
+## 🚀 Quick Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/deoxy-genz/EcoFashion-ai)
+
+**Live Demo**: [Coming soon after deployment]
+
 ## 🌟 Features
 
 ### 1. **Home Page**
