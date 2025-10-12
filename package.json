@@ -1,0 +1,40 @@
+{
+  "name": "ecofashion-ai",
+  "version": "1.0.0",
+  "description": "Generative AI in Fashion Sustainability - A comprehensive web application for sustainable fashion design and analysis",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx live-server --port=3000 --open=/index.html",
+    "dev": "npx live-server --port=3000 --open=/index.html --watch=.",
+    "build": "echo Build process for static site - files are ready for deployment",
+    "serve": "npx http-server -p 3000 -o",
+    "install-deps": "npm install live-server http-server",
+    "test": "echo No tests specified yet"
+  },
+  "keywords": [
+    "sustainability",
+    "fashion",
+    "ai",
+    "eco-friendly",
+    "web-app",
+    "design-generator",
+    "demand-prediction"
+  ],
+  "author": "EcoFashion AI Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/ecofashion-ai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/ecofashion-ai/issues"
+  },
+  "homepage": "https://your-username.github.io/ecofashion-ai"
+}

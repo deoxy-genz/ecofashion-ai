@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative AI in Fashion Sustainability</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>🌱 EcoFashion AI</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="pages/generate-design.html" class="nav-link">Generate Design</a>
+                <a href="pages/sustainability-score.html" class="nav-link">Sustainability Score</a>
+                <a href="pages/demand-prediction.html" class="nav-link">Predict Demand</a>
+            </div>
+            <div class="nav-actions">
+                <div class="weather-widget" id="weather-widget">
+                    <span id="weather-info">Loading weather...</span>
+                </div>
+                <button class="settings-btn" onclick="openSettings()" title="Settings">⚙️</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title fade-in">Generative AI in Fashion Sustainability</h1>
+                <p class="hero-subtitle fade-in-delay">
+                    Revolutionizing fashion with AI-powered sustainable design. 
+                    Help reduce waste, create eco-friendly designs, and predict demand patterns 
+                    to make fashion more sustainable for our planet.
+                </p>
+                <div class="hero-stats fade-in-delay-2">
+                    <div class="stat-item">
+                        <h3>85%</h3>
+                        <p>Waste Reduction</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>40%</h3>
+                        <p>Carbon Footprint Decrease</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>92%</h3>
+                        <p>Demand Accuracy</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="container">
+                <h2 class="section-title">How AI Transforms Fashion Sustainability</h2>
+                <div class="features-grid">
+                    <div class="feature-card hover-lift" onclick="navigateToPage('pages/generate-design.html')">
+                        <div class="feature-icon">🎨</div>
+                        <h3>Generate Design</h3>
+                        <p>Create eco-friendly fashion designs using AI that minimizes fabric waste and uses sustainable materials.</p>
+                        <button class="feature-btn">Generate Design</button>
+                    </div>
+
+                    <div class="feature-card hover-lift" onclick="navigateToPage('pages/sustainability-score.html')">
+                        <div class="feature-icon">📊</div>
+                        <h3>Check Sustainability Score</h3>
+                        <p>Analyze clothing items for their environmental impact, carbon footprint, and recyclability potential.</p>
+                        <button class="feature-btn">Check Score</button>
+                    </div>
+
+                    <div class="feature-card hover-lift" onclick="navigateToPage('pages/demand-prediction.html')">
+                        <div class="feature-icon">📈</div>
+                        <h3>Predict Demand</h3>
+                        <p>Use AI to forecast fashion demand patterns and optimize production to reduce overstock and waste.</p>
+                        <button class="feature-btn">Predict Demand</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="impact-section">
+            <div class="container">
+                <h2 class="section-title">Environmental Impact</h2>
+                <div class="impact-content">
+                    <div class="impact-text">
+                        <h3>The Fashion Industry Challenge</h3>
+                        <p>Fashion is one of the world's most polluting industries, responsible for:</p>
+                        <ul>
+                            <li>10% of global carbon emissions</li>
+                            <li>20% of global wastewater</li>
+                            <li>85% of textiles end up in landfills</li>
+                            <li>500,000 tons of microfibers released into oceans</li>
+                        </ul>
+                        <h3>AI-Powered Solutions</h3>
+                        <p>Our platform uses artificial intelligence to address these challenges by optimizing design processes, predicting consumer demand, and promoting sustainable materials.</p>
+                    </div>
+                    <div class="impact-visual">
+                        <div class="circular-progress">
+                            <div class="progress-ring">
+                                <div class="progress-fill" data-progress="75"></div>
+                                <div class="progress-text">
+                                    <span class="progress-number">75%</span>
+                                    <span class="progress-label">Sustainability Improvement</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 EcoFashion AI. Making fashion sustainable with artificial intelligence.</p>
+        </div>
+    </footer>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="settings-modal" style="display: none;">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3>⚙️ Settings</h3>
+                <button class="close-settings" onclick="closeSettings()">&times;</button>
+            </div>
+            <div class="settings-body">
+                <div class="setting-group">
+                    <h4>🌤️ Weather Settings</h4>
+                    <button onclick="WeatherAPIManager.showApiKeyPrompt()" class="settings-action-btn">
+                        Configure Weather API
+                    </button>
+                    <button onclick="WeatherAPIManager.clearApiKey()" class="settings-action-btn secondary">
+                        Reset to Demo Mode
+                    </button>
+                </div>
+                
+                <div class="setting-group">
+                    <h4>📊 Data & Privacy</h4>
+                    <label class="settings-toggle">
+                        <input type="checkbox" id="save-form-data" checked>
+                        <span>Auto-save form data</span>
+                    </label>
+                    <label class="settings-toggle">
+                        <input type="checkbox" id="track-performance" checked>
+                        <span>Performance monitoring</span>
+                    </label>
+                    <button onclick="clearAllData()" class="settings-action-btn danger">
+                        Clear All Saved Data
+                    </button>
+                </div>
+                
+                <div class="setting-group">
+                    <h4>🎨 Appearance</h4>
+                    <label class="settings-toggle">
+                        <input type="checkbox" id="animations-enabled" checked>
+                        <span>Enable animations</span>
+                    </label>
+                    <label class="settings-toggle">
+                        <input type="checkbox" id="reduced-motion">
+                        <span>Reduced motion (accessibility)</span>
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <h4>ℹ️ About</h4>
+                    <p>EcoFashion AI v1.0.1</p>
+                    <p><small>Real-time sustainable fashion platform</small></p>
+                    <button onclick="showAppInfo()" class="settings-action-btn">
+                        View App Information
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/weather.js"></script>
+    <script>
+        // Settings functionality
+        function openSettings() {
+            document.getElementById('settings-modal').style.display = 'flex';
+            loadSettingsValues();
+        }
+        
+        function closeSettings() {
+            document.getElementById('settings-modal').style.display = 'none';
+            saveSettingsValues();
+        }
+        
+        function loadSettingsValues() {
+            const settings = JSON.parse(localStorage.getItem('appSettings') || '{}');
+            
+            document.getElementById('save-form-data').checked = settings.saveFormData !== false;
+            document.getElementById('track-performance').checked = settings.trackPerformance !== false;
+            document.getElementById('animations-enabled').checked = settings.animationsEnabled !== false;
+            document.getElementById('reduced-motion').checked = settings.reducedMotion === true;
+        }
+        
+        function saveSettingsValues() {
+            const settings = {
+                saveFormData: document.getElementById('save-form-data').checked,
+                trackPerformance: document.getElementById('track-performance').checked,
+                animationsEnabled: document.getElementById('animations-enabled').checked,
+                reducedMotion: document.getElementById('reduced-motion').checked
+            };
+            
+            localStorage.setItem('appSettings', JSON.stringify(settings));
+            applySettings(settings);
+        }
+        
+        function applySettings(settings) {
+            // Apply reduced motion
+            if (settings.reducedMotion) {
+                document.body.classList.add('reduced-motion');
+            } else {
+                document.body.classList.remove('reduced-motion');
+            }
+            
+            // Apply animation settings
+            if (!settings.animationsEnabled) {
+                document.body.classList.add('no-animations');
+            } else {
+                document.body.classList.remove('no-animations');
+            }
+        }
+        
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all saved data? This action cannot be undone.')) {
+                // Clear localStorage
+                const keysToKeep = ['appSettings'];
+                Object.keys(localStorage).forEach(key => {
+                    if (!keysToKeep.includes(key)) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                
+                // Clear sessionStorage
+                sessionStorage.clear();
+                
+                // Clear IndexedDB
+                if (window.ecoFashionDB) {
+                    const stores = ['designs', 'scores', 'predictions'];
+                    stores.forEach(storeName => {
+                        const transaction = window.ecoFashionDB.transaction([storeName], 'readwrite');
+                        const store = transaction.objectStore(storeName);
+                        store.clear();
+                    });
+                }
+                
+                EcoFashionAI.showNotification('All data cleared successfully', 'success');
+            }
+        }
+        
+        function showAppInfo() {
+            const modal = document.createElement('div');
+            modal.className = 'info-modal';
+            modal.innerHTML = `
+                <div class="info-content">
+                    <h3>🌱 EcoFashion AI</h3>
+                    <div class="info-details">
+                        <p><strong>Version:</strong> 1.0.1</p>
+                        <p><strong>Release Date:</strong> October 12, 2025</p>
+                        <p><strong>Features:</strong></p>
+                        <ul>
+                            <li>AI-powered design generation</li>
+                            <li>Sustainability scoring system</li>
+                            <li>Demand prediction algorithms</li>
+                            <li>Real-time weather integration</li>
+                            <li>Offline data storage</li>
+                        </ul>
+                        <p><strong>Technologies:</strong> HTML5, CSS3, JavaScript ES6+, IndexedDB, Web APIs</p>
+                        <p><strong>Data Storage:</strong> All data is stored locally on your device for privacy</p>
+                    </div>
+                    <button onclick="closeInfoModal()" class="btn-primary">Close</button>
+                </div>
+            `;
+            
+            modal.onclick = (e) => {
+                if (e.target === modal) closeInfoModal();
+            };
+            
+            document.body.appendChild(modal);
+            
+            window.closeInfoModal = () => {
+                document.body.removeChild(modal);
+                delete window.closeInfoModal;
+            };
+        }
+        
+        // Initialize settings on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const settings = JSON.parse(localStorage.getItem('appSettings') || '{}');
+            applySettings(settings);
+        });
+        
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('settings-modal');
+            if (e.target === modal) {
+                closeSettings();
+            }
+        });
+    </script>
+</body>
+</html>

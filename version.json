@@ -1,0 +1,22 @@
+{
+  "version": "1.0.1",
+  "releaseDate": "2025-10-12",
+  "features": [
+    "Real-time weather integration",
+    "Offline data storage",
+    "Auto-save form data",
+    "Performance monitoring",
+    "Network status indicator"
+  ],
+  "improvements": [
+    "Enhanced weather widget with real API support",
+    "Better error handling",
+    "Improved user experience",
+    "Performance optimizations"
+  ],
+  "bugFixes": [
+    "Fixed form validation issues",
+    "Improved mobile responsiveness",
+    "Better loading states"
+  ]
+}

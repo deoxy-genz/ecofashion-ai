@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Favicon Generator</title>
+</head>
+<body>
+    <canvas id="favicon" width="32" height="32"></canvas>
+    <script>
+        const canvas = document.getElementById('favicon');
+        const ctx = canvas.getContext('2d');
+        
+        // Create a simple green leaf favicon
+        ctx.fillStyle = '#27ae60';
+        ctx.fillRect(0, 0, 32, 32);
+        
+        // Draw a leaf shape
+        ctx.fillStyle = '#2ecc71';
+        ctx.beginPath();
+        ctx.moveTo(8, 16);
+        ctx.quadraticCurveTo(16, 8, 24, 16);
+        ctx.quadraticCurveTo(16, 24, 8, 16);
+        ctx.fill();
+        
+        // Convert to ICO format (simplified)
+        const dataURL = canvas.toDataURL('image/png');
+        console.log('Favicon generated:', dataURL);
+    </script>
+</body>
+</html>
