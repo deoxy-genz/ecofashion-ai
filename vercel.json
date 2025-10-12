@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "name": "ecofashion-ai",
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "functions": {},
+  "rewrites": [
+    {
+      "source": "/pages/(.*)",
+      "destination": "/pages/$1"
+    }
+  ]
+}
