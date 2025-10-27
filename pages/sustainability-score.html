@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/animations.css">
+    <!-- TensorFlow.js for Real AI Models -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -269,16 +271,64 @@
             }
             
             EcoFashionAI.addLoadingState(analyzeBtn);
+            EcoFashionAI.showNotification('🤖 Running AI sustainability analysis...', 'info');
             
-            setTimeout(() => {
-                const analysis = calculateSustainabilityScore(itemType, material, production);
-                displayAnalysis(analysis);
-                resultDiv.style.display = 'block';
-                resultDiv.scrollIntoView({ behavior: 'smooth' });
+            // Use real AI model for analysis
+            if (window.aiModels && window.aiModels.isInitialized) {
+                const itemData = {
+                    itemType,
+                    material,
+                    production,
+                    quantity: 1
+                };
                 
-                EcoFashionAI.removeLoadingState(analyzeBtn, '📊 Analyze Sustainability Score');
-                EcoFashionAI.showNotification('Sustainability analysis completed!', 'success');
-            }, 2000);
+                window.aiModels.predictSustainabilityScore(itemData)
+                    .then(analysis => {
+                        const formattedAnalysis = {
+                            itemType: itemType.replace('-', ' ').toUpperCase(),
+                            material: material.replace('-', ' ').toUpperCase(),
+                            production: production.replace('-', ' ').toUpperCase(),
+                            sustainability: analysis.overallScore,
+                            carbonFootprint: analysis.carbonFootprint,
+                            recyclability: analysis.recyclability,
+                            waterUsage: analysis.waterUsage,
+                            recommendations: analysis.recommendations,
+                            aiPowered: true,
+                            confidence: Math.round(analysis.confidence * 100)
+                        };
+                        
+                        displayAnalysis(formattedAnalysis);
+                        resultDiv.style.display = 'block';
+                        resultDiv.scrollIntoView({ behavior: 'smooth' });
+                        
+                        EcoFashionAI.removeLoadingState(analyzeBtn, '📊 Analyze Sustainability Score');
+                        EcoFashionAI.showNotification(`✅ AI Analysis Complete (${formattedAnalysis.confidence}% confidence)`, 'success');
+                    })
+                    .catch(error => {
+                        console.error('AI analysis error:', error);
+                        // Fallback to traditional calculation
+                        setTimeout(() => {
+                            const analysis = calculateSustainabilityScore(itemType, material, production);
+                            displayAnalysis(analysis);
+                            resultDiv.style.display = 'block';
+                            resultDiv.scrollIntoView({ behavior: 'smooth' });
+                            
+                            EcoFashionAI.removeLoadingState(analyzeBtn, '📊 Analyze Sustainability Score');
+                            EcoFashionAI.showNotification('Analysis completed (Fallback mode)', 'warning');
+                        }, 1500);
+                    });
+            } else {
+                // Fallback if AI not initialized
+                setTimeout(() => {
+                    const analysis = calculateSustainabilityScore(itemType, material, production);
+                    displayAnalysis(analysis);
+                    resultDiv.style.display = 'block';
+                    resultDiv.scrollIntoView({ behavior: 'smooth' });
+                    
+                    EcoFashionAI.removeLoadingState(analyzeBtn, '📊 Analyze Sustainability Score');
+                    EcoFashionAI.showNotification('Sustainability analysis completed!', 'success');
+                }, 2000);
+            }
         }
 
         function calculateSustainabilityScore(itemType, material, production) {
@@ -617,5 +667,7 @@
         `;
         document.head.insertAdjacentHTML('beforeend', sustainabilityStyles);
     </script>
+    <!-- Real AI Models using TensorFlow.js -->
+    <script src="../js/ai-models.js"></script>
 </body>
 </html>

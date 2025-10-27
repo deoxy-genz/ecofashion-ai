@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animations.css">
+    <!-- TensorFlow.js for Real AI Models -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -297,6 +299,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             const settings = JSON.parse(localStorage.getItem('appSettings') || '{}');
             applySettings(settings);
+            
+            // Initialize AI models
+            if (window.aiModels) {
+                showNotification('🤖 Initializing AI models...', 'info');
+            }
+        });
+        
+        // Listen for AI models ready event
+        window.addEventListener('ai-models-ready', function() {
+            showNotification('✅ Real AI models loaded successfully!', 'success');
         });
         
         // Close modal when clicking outside
@@ -307,5 +319,7 @@
             }
         });
     </script>
+    <!-- Real AI Models using TensorFlow.js -->
+    <script src="js/ai-models.js"></script>
 </body>
 </html>

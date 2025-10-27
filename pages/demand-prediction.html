@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/animations.css">
+    <!-- TensorFlow.js for Real AI Models -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -216,19 +218,70 @@
             }
             
             EcoFashionAI.addLoadingState(predictBtn);
+            EcoFashionAI.showNotification('🤖 Running AI demand forecasting (LSTM model)...', 'info');
             
-            // Simulate AI processing
-            setTimeout(() => {
-                const prediction = calculateDemandPrediction(
-                    category, lastMonthSales, season, marketingSpend, sustainabilityFocus
-                );
-                displayPrediction(prediction);
-                resultDiv.style.display = 'block';
-                resultDiv.scrollIntoView({ behavior: 'smooth' });
+            // Use real AI LSTM model for demand prediction
+            if (window.aiModels && window.aiModels.isInitialized) {
+                const demandData = {
+                    category,
+                    baseSales: lastMonthSales,
+                    season,
+                    marketingBudget: marketingSpend,
+                    sustainabilityFocus: sustainabilityFocus === 'high' ? 'yes' : 'no'
+                };
                 
-                EcoFashionAI.removeLoadingState(predictBtn, '📈 Predict Demand');
-                EcoFashionAI.showNotification('Demand prediction completed!', 'success');
-            }, 2500);
+                window.aiModels.predictDemand(demandData)
+                    .then(aiPrediction => {
+                        const growthRate = ((aiPrediction.predictedDemand - lastMonthSales) / lastMonthSales * 100).toFixed(1);
+                        
+                        const prediction = {
+                            category: category.replace('-', ' ').toUpperCase(),
+                            lastMonth: lastMonthSales,
+                            predicted: aiPrediction.predictedDemand,
+                            confidence: Math.round(aiPrediction.confidence * 100),
+                            growthRate: growthRate,
+                            trend: aiPrediction.trendAnalysis,
+                            recommendations: aiPrediction.recommendations,
+                            aiPowered: true,
+                            modelType: 'LSTM Neural Network'
+                        };
+                        
+                        displayPrediction(prediction);
+                        resultDiv.style.display = 'block';
+                        resultDiv.scrollIntoView({ behavior: 'smooth' });
+                        
+                        EcoFashionAI.removeLoadingState(predictBtn, '📈 Predict Demand');
+                        EcoFashionAI.showNotification(`✅ AI Forecast Complete (${prediction.confidence}% confidence)`, 'success');
+                    })
+                    .catch(error => {
+                        console.error('AI prediction error:', error);
+                        // Fallback to traditional calculation
+                        setTimeout(() => {
+                            const prediction = calculateDemandPrediction(
+                                category, lastMonthSales, season, marketingSpend, sustainabilityFocus
+                            );
+                            displayPrediction(prediction);
+                            resultDiv.style.display = 'block';
+                            resultDiv.scrollIntoView({ behavior: 'smooth' });
+                            
+                            EcoFashionAI.removeLoadingState(predictBtn, '📈 Predict Demand');
+                            EcoFashionAI.showNotification('Demand prediction completed (Fallback mode)', 'warning');
+                        }, 1500);
+                    });
+            } else {
+                // Fallback if AI not initialized
+                setTimeout(() => {
+                    const prediction = calculateDemandPrediction(
+                        category, lastMonthSales, season, marketingSpend, sustainabilityFocus
+                    );
+                    displayPrediction(prediction);
+                    resultDiv.style.display = 'block';
+                    resultDiv.scrollIntoView({ behavior: 'smooth' });
+                    
+                    EcoFashionAI.removeLoadingState(predictBtn, '📈 Predict Demand');
+                    EcoFashionAI.showNotification('Demand prediction completed!', 'success');
+                }, 2500);
+            }
         }
 
         function calculateDemandPrediction(category, lastSales, season, marketing, sustainability) {
@@ -804,5 +857,7 @@
         `;
         document.head.insertAdjacentHTML('beforeend', demandStyles);
     </script>
+    <!-- Real AI Models using TensorFlow.js -->
+    <script src="../js/ai-models.js"></script>
 </body>
 </html>
