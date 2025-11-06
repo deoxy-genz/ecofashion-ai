@@ -233,9 +233,12 @@
             const imageDiv = document.getElementById('design-image');
             const detailsDiv = document.getElementById('design-details');
 
+            // Create realistic design visualization
+            const designVisualization = createDesignVisualization(data);
+
             imageDiv.innerHTML = `
                 <div class="generated-design">
-                    <div class="design-icon" style="font-size: 8rem; margin-bottom: 1rem;">${data.icon}</div>
+                    ${designVisualization}
                     <div class="design-badge">
                         <span class="sustainability-score score-${EcoFashionAI.getScoreCategory(data.sustainability)}">
                             ${data.sustainability}% Sustainable
@@ -245,17 +248,17 @@
             `;
 
             detailsDiv.innerHTML = `
-                <h3>AI-Generated ${data.type}</h3>
+                <h3>AI-Generated ${data.type} Design</h3>
                 <p class="design-description">
                     This AI-generated design uses <strong>${data.material}</strong> and incorporates 
-                    sustainable design principles to minimize environmental impact.
+                    sustainable design principles with advanced pattern engineering for minimal environmental impact.
                 </p>
                 
                 <div class="impact-metrics">
                     <div class="metric">
                         <span class="metric-icon">♻️</span>
                         <span class="metric-value">${data.wasteReduction}%</span>
-                        <span class="metric-label">Waste Reduction</span>
+                        <span class="metric-label">Fabric Waste Reduction</span>
                     </div>
                     <div class="metric">
                         <span class="metric-icon">🌍</span>
@@ -265,26 +268,191 @@
                     <div class="metric">
                         <span class="metric-icon">💧</span>
                         <span class="metric-value">${data.waterSavings}%</span>
-                        <span class="metric-label">Water Savings</span>
+                        <span class="metric-label">Water Consumption Savings</span>
                     </div>
                 </div>
 
                 <div class="material-info">
-                    <h4>Material Benefits</h4>
+                    <h4>Material Specifications</h4>
+                    <p><strong>Primary Fabric:</strong> ${data.material}</p>
                     <p>${data.materialDescription}</p>
+                    <p><strong>Size Range:</strong> ${data.sizeRange}</p>
+                    <p><strong>Color Impact:</strong> ${data.colorImpact}</p>
                 </div>
 
                 <div class="design-features">
-                    <h4>Sustainable Features</h4>
+                    <h4>Technical Design Features</h4>
                     <ul>
-                        <li>Zero-waste pattern design</li>
-                        <li>Durable construction for longevity</li>
-                        <li>Timeless style transcends trends</li>
-                        <li>Recyclable at end of life</li>
+                        <li>Zero-waste pattern design with optimized cutting layout</li>
+                        <li>Reinforced construction at high-stress points for longevity</li>
+                        <li>Timeless silhouette designed to transcend seasonal trends</li>
+                        <li>Modular design allows for easy repair and component replacement</li>
                         <li>${data.colorImpact}</li>
+                        <li>Recyclable materials with end-of-life disassembly considerations</li>
                     </ul>
                 </div>
+
+                <div class="design-specs">
+                    <h4>Production Specifications</h4>
+                    <p><strong>Estimated Production Time:</strong> ${Math.floor(Math.random() * 3) + 2} weeks</p>
+                    <p><strong>Manufacturing Method:</strong> Ethical small-batch production</p>
+                    <p><strong>Quality Standard:</strong> Commercial-grade construction</p>
+                    <p><strong>Care Instructions:</strong> Machine washable, tumble dry low</p>
+                </div>
             `;
+        }
+
+        // Create realistic design visualization using SVG
+        function createDesignVisualization(data) {
+            const type = data.type.toLowerCase();
+            const material = data.material.toLowerCase();
+            
+            // Color mapping for realistic fabric colors
+            const fabricColors = {
+                'organic-cotton': '#F5F5DC',
+                'recycled-polyester': '#E8E8E8',
+                'hemp': '#C4B896',
+                'bamboo': '#EAE7D6',
+                'tencel': '#F0EAD6',
+                'linen': '#FAF0E6',
+                'recycled-wool': '#D3D3D3',
+                'peace-silk': '#FFF8DC'
+            };
+
+            const baseColor = fabricColors[material] || '#F5F5DC';
+            const accentColor = adjustColorBrightness(baseColor, -20);
+
+            // Generate garment-specific SVG design
+            const svgDesigns = {
+                't-shirt': `
+                    <svg viewBox="0 0 200 250" class="design-svg">
+                        <defs>
+                            <linearGradient id="fabricGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:${baseColor};stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:${accentColor};stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Body -->
+                        <path d="M 60 60 L 50 80 L 50 200 L 150 200 L 150 80 L 140 60 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <!-- Sleeves -->
+                        <path d="M 60 60 L 30 90 L 30 110 L 50 100 Z" fill="${baseColor}" stroke="#333" stroke-width="1.5"/>
+                        <path d="M 140 60 L 170 90 L 170 110 L 150 100 Z" fill="${baseColor}" stroke="#333" stroke-width="1.5"/>
+                        <!-- Collar -->
+                        <ellipse cx="100" cy="60" rx="20" ry="10" fill="${accentColor}" stroke="#333" stroke-width="1.5"/>
+                        <!-- Stitching details -->
+                        <line x1="100" y1="60" x2="100" y2="200" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+                        <text x="100" y="230" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">T-Shirt Design</text>
+                    </svg>
+                `,
+                'dress': `
+                    <svg viewBox="0 0 200 280" class="design-svg">
+                        <defs>
+                            <linearGradient id="fabricGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:${baseColor};stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:${accentColor};stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Bodice -->
+                        <path d="M 65 50 L 55 70 L 50 120 L 70 120 L 70 70 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <path d="M 135 50 L 145 70 L 150 120 L 130 120 L 130 70 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <!-- Skirt -->
+                        <path d="M 70 120 L 40 240 L 160 240 L 130 120 Z" fill="${baseColor}" stroke="#333" stroke-width="1.5"/>
+                        <!-- Waist detail -->
+                        <line x1="70" y1="120" x2="130" y2="120" stroke="${accentColor}" stroke-width="3"/>
+                        <!-- Princess seams -->
+                        <line x1="85" y1="120" x2="65" y2="240" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+                        <line x1="115" y1="120" x2="135" y2="240" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+                        <text x="100" y="270" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">Dress Design</text>
+                    </svg>
+                `,
+                'pants': `
+                    <svg viewBox="0 0 200 280" class="design-svg">
+                        <defs>
+                            <linearGradient id="fabricGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:${baseColor};stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:${accentColor};stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Waistband -->
+                        <rect x="60" y="50" width="80" height="15" fill="${accentColor}" stroke="#333" stroke-width="1.5"/>
+                        <!-- Left leg -->
+                        <path d="M 60 65 L 65 120 L 70 250 L 90 250 L 95 120 L 100 65 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <!-- Right leg -->
+                        <path d="M 100 65 L 105 120 L 110 250 L 130 250 L 135 120 L 140 65 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <!-- Inseam -->
+                        <line x1="100" y1="65" x2="100" y2="250" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+                        <!-- Pockets -->
+                        <path d="M 70 75 Q 72 80 70 85" stroke="#666" stroke-width="1" fill="none"/>
+                        <path d="M 130 75 Q 128 80 130 85" stroke="#666" stroke-width="1" fill="none"/>
+                        <text x="100" y="275" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">Pants Design</text>
+                    </svg>
+                `,
+                'jacket': `
+                    <svg viewBox="0 0 200 270" class="design-svg">
+                        <defs>
+                            <linearGradient id="fabricGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:${baseColor};stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:${accentColor};stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Left front panel -->
+                        <path d="M 55 60 L 45 80 L 40 220 L 90 220 L 95 80 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <!-- Right front panel -->
+                        <path d="M 145 60 L 155 80 L 160 220 L 110 220 L 105 80 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <!-- Collar -->
+                        <path d="M 85 60 L 95 50 L 105 50 L 115 60" fill="${accentColor}" stroke="#333" stroke-width="1.5"/>
+                        <!-- Left sleeve -->
+                        <path d="M 55 60 L 25 90 L 25 180 L 40 170 Z" fill="${baseColor}" stroke="#333" stroke-width="1.5"/>
+                        <!-- Right sleeve -->
+                        <path d="M 145 60 L 175 90 L 175 180 L 160 170 Z" fill="${baseColor}" stroke="#333" stroke-width="1.5"/>
+                        <!-- Zipper -->
+                        <line x1="100" y1="60" x2="100" y2="220" stroke="#666" stroke-width="2"/>
+                        <!-- Pockets -->
+                        <rect x="50" y="140" width="35" height="40" fill="none" stroke="#666" stroke-width="1"/>
+                        <rect x="115" y="140" width="35" height="40" fill="none" stroke="#666" stroke-width="1"/>
+                        <text x="100" y="250" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">Jacket Design</text>
+                    </svg>
+                `
+            };
+
+            // Default design for other garment types
+            const defaultDesign = `
+                <svg viewBox="0 0 200 250" class="design-svg">
+                    <defs>
+                        <linearGradient id="fabricGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:${baseColor};stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:${accentColor};stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="50" y="60" width="100" height="160" rx="5" fill="url(#fabricGrad)" stroke="#333" stroke-width="2"/>
+                    <line x1="100" y1="60" x2="100" y2="220" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+                    <text x="100" y="240" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">${data.type} Design</text>
+                </svg>
+            `;
+
+            return svgDesigns[type] || defaultDesign;
+        }
+
+        // Helper function to adjust color brightness
+        function adjustColorBrightness(hex, percent) {
+            // Remove # if present
+            hex = hex.replace('#', '');
+            
+            // Convert to RGB
+            let r = parseInt(hex.substring(0, 2), 16);
+            let g = parseInt(hex.substring(2, 4), 16);
+            let b = parseInt(hex.substring(4, 6), 16);
+            
+            // Adjust brightness
+            r = Math.max(0, Math.min(255, r + percent));
+            g = Math.max(0, Math.min(255, g + percent));
+            b = Math.max(0, Math.min(255, b + percent));
+            
+            // Convert back to hex
+            return '#' + [r, g, b].map(x => {
+                const hex = x.toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            }).join('');
         }
 
         // Add custom styles for the design page
@@ -300,20 +468,33 @@
                 .generated-design {
                     text-align: center;
                     padding: 2rem;
-                    background: rgba(255, 255, 255, 0.1);
+                    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
                     border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                }
+
+                .design-svg {
+                    width: 100%;
+                    max-width: 300px;
+                    height: auto;
+                    margin: 0 auto;
+                    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+                    background: white;
+                    border-radius: 10px;
+                    padding: 20px;
                 }
 
                 .design-badge {
-                    margin-top: 1rem;
+                    margin-top: 1.5rem;
                 }
 
                 .sustainability-score {
                     display: inline-block;
-                    padding: 0.5rem 1rem;
+                    padding: 0.75rem 1.5rem;
                     border-radius: 25px;
                     font-weight: 600;
-                    font-size: 0.9rem;
+                    font-size: 1rem;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
                 }
 
                 .impact-metrics {
@@ -325,20 +506,27 @@
 
                 .metric {
                     text-align: center;
-                    padding: 1rem;
-                    background: rgba(255, 255, 255, 0.1);
-                    border-radius: 10px;
+                    padding: 1.5rem 1rem;
+                    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+                    border-radius: 12px;
+                    border: 2px solid #e0e0e0;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }
+
+                .metric:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
                 }
 
                 .metric-icon {
                     display: block;
-                    font-size: 1.5rem;
+                    font-size: 2rem;
                     margin-bottom: 0.5rem;
                 }
 
                 .metric-value {
                     display: block;
-                    font-size: 1.5rem;
+                    font-size: 2rem;
                     font-weight: 700;
                     color: #2ecc71;
                     margin-bottom: 0.3rem;
@@ -346,36 +534,65 @@
 
                 .metric-label {
                     display: block;
-                    font-size: 0.8rem;
+                    font-size: 0.85rem;
                     opacity: 0.8;
+                    font-weight: 500;
                 }
 
-                .material-info, .design-features {
+                .material-info, .design-features, .design-specs {
                     margin: 1.5rem 0;
+                    padding: 1.5rem;
+                    background: rgba(46, 204, 113, 0.05);
+                    border-left: 4px solid #2ecc71;
+                    border-radius: 8px;
                 }
 
-                .material-info h4, .design-features h4 {
-                    color: #2ecc71;
-                    margin-bottom: 0.8rem;
+                .material-info h4, .design-features h4, .design-specs h4 {
+                    color: #2d5016;
+                    margin-bottom: 1rem;
+                    font-size: 1.1rem;
+                }
+
+                .material-info p, .design-specs p {
+                    margin: 0.5rem 0;
+                    line-height: 1.6;
                 }
 
                 .design-features ul {
                     list-style: none;
                     padding: 0;
+                    margin: 0;
                 }
 
                 .design-features li {
-                    padding: 0.3rem 0;
+                    padding: 0.6rem 0;
                     position: relative;
-                    padding-left: 1.5rem;
+                    padding-left: 2rem;
+                    line-height: 1.5;
                 }
 
                 .design-features li::before {
                     content: '✓';
                     position: absolute;
                     left: 0;
+                    top: 0.6rem;
                     color: #2ecc71;
                     font-weight: bold;
+                    font-size: 1.2rem;
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    background: rgba(46, 204, 113, 0.1);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .design-description {
+                    font-size: 1.05rem;
+                    line-height: 1.7;
+                    color: #555;
+                    margin-bottom: 1.5rem;
                 }
 
                 @media (max-width: 768px) {
@@ -385,6 +602,10 @@
                     
                     .impact-metrics {
                         grid-template-columns: 1fr;
+                    }
+
+                    .design-svg {
+                        max-width: 250px;
                     }
                 }
             </style>

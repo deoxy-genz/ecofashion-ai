@@ -438,13 +438,124 @@ class AIModelManager {
 
     // Get default design features
     getDefaultFeatures(params) {
+        // Enhanced realistic design features based on garment type
+        const designFeatures = {
+            'shirt': [
+                `Tailored fit with ergonomic seam placement for comfort and minimal fabric waste`,
+                `Reinforced collar and cuffs using zero-waste pattern cutting techniques`,
+                `Hidden button placket with natural corozo nut buttons for refined aesthetic`,
+                `French seams throughout for durability and clean interior finish`,
+                `Curved hem design optimized for both tucked and untucked wear`
+            ],
+            't-shirt': [
+                `Seamless raglan sleeves eliminate unnecessary seams and reduce cutting waste`,
+                `Ribbed crew neck with double-stitched edges for enhanced longevity`,
+                `Side seam construction with reinforced stress points`,
+                `Extended back length provides better coverage and contemporary silhouette`,
+                `Flatlock stitching prevents chafing and adds visual detail`
+            ],
+            'dress': [
+                `A-line silhouette with princess seams for flattering fit across body types`,
+                `Concealed side pockets integrated into seam construction`,
+                `Adjustable self-tie waist belt cut from main fabric for zero waste`,
+                `Bias-cut panels enhance drape while maximizing fabric efficiency`,
+                `Invisible zipper installation with reinforced seam allowances`
+            ],
+            'pants': [
+                `Engineered waistband with internal drawstring for adjustable comfort`,
+                `Articulated knee construction allows natural movement and reduces stress`,
+                `Reinforced inseam and crotch gusset extends garment lifespan`,
+                `Slant front pockets with stay stitching prevent sagging over time`,
+                `Tapered leg with cuffed hem option maximizes versatility`
+            ],
+            'jacket': [
+                `Structured shoulders with sustainable padding made from recycled fibers`,
+                `Full lining using breathable, moisture-wicking sustainable textiles`,
+                `Interior pockets including secure zip pocket for valuables`,
+                `Two-way zipper or button closure provides styling flexibility`,
+                `Adjustable cuffs with hidden snap closure system`
+            ],
+            'skirt': [
+                `High-waisted design with comfortable elastic-free waistband construction`,
+                `Box pleats engineered for movement while maintaining structured appearance`,
+                `Hidden side zip with hook-and-bar closure for clean lines`,
+                `Knee-length hem with split detail for ease of movement`,
+                `Internal stay tape prevents waistband rolling and maintains shape`
+            ],
+            'sweater': [
+                `Raglan sleeve construction reduces seam bulk at shoulders`,
+                `Ribbed cuffs and hem with recovery properties maintain shape`,
+                `Dropped shoulder design creates relaxed, contemporary silhouette`,
+                `Reinforced neckline with integrated collar stand`,
+                `Side vents at hem improve mobility and prevent riding up`
+            ],
+            'blouse': [
+                `Dartless construction using curved seaming for elegant fit`,
+                `Extended shoulder yoke distributes fabric smoothly across back`,
+                `Placket with hidden button stand creates clean front panel`,
+                `Shaped hem with side slits accommodates various body proportions`,
+                `Set-in sleeves with gathered cap for refined drape`
+            ],
+            'shorts': [
+                `Mid-rise waistband with internal drawstring provides secure fit`,
+                `Curved inseam reduces chafing and improves comfort`,
+                `Angled side pockets with bar tack reinforcement at stress points`,
+                `Back patch pockets with button closure add functional detail`,
+                `Raw hem finish with stay stitching prevents fraying while reducing bulk`
+            ]
+        };
+
+        const clothingType = params.clothingType || 'shirt';
+        const specificFeatures = designFeatures[clothingType] || designFeatures['shirt'];
+
+        // Add color-specific details
+        const colorDetails = this.getColorDetails(params.primaryColor, params.secondaryColor);
+        
+        // Add material-specific construction notes
+        const materialNotes = this.getMaterialConstructionNotes(params.material);
+
         return [
-            `Sustainable ${params.material} construction for maximum comfort`,
-            `Color combination: ${params.primaryColor} with ${params.secondaryColor} accents`,
-            `Zero-waste pattern cutting technique`,
-            `Designed for ${params.season} season durability`,
-            `Fair-trade certified and locally sourced materials`
+            ...specificFeatures,
+            colorDetails,
+            materialNotes,
+            `Designed for ${params.season} season with appropriate weight and breathability`,
+            `All seams finished with reinforced stitching for commercial-grade durability`
         ];
+    }
+
+    // Get realistic color combination details
+    getColorDetails(primaryColor, secondaryColor) {
+        const colorCombinations = {
+            'green-white': 'Forest green base with crisp white contrast panels at collar and cuffs',
+            'blue-gray': 'Deep navy foundation with heather gray color blocking on sleeves',
+            'beige-brown': 'Natural beige body with rich chocolate brown trim detailing',
+            'black-white': 'Classic black base with stark white piping along seams',
+            'red-black': 'Burgundy red primary with black accent stitching and binding',
+            'navy-cream': 'Midnight navy with off-white cream panels creating visual interest',
+            'olive-tan': 'Olive drab base complemented by sandy tan functional elements',
+            'charcoal-silver': 'Charcoal gray foundation with metallic silver topstitching detail'
+        };
+
+        const key = `${primaryColor}-${secondaryColor}`.toLowerCase();
+        return colorCombinations[key] || 
+               `${primaryColor} primary color enhanced with ${secondaryColor} contrast stitching and binding details`;
+    }
+
+    // Get material-specific construction notes
+    getMaterialConstructionNotes(material) {
+        const materialNotes = {
+            'organic-cotton': 'Pre-washed organic cotton prevents shrinkage and ensures color fastness',
+            'hemp': 'Hemp fiber construction becomes softer with each wash while maintaining strength',
+            'bamboo': 'Bamboo viscose offers silky drape with natural temperature regulation properties',
+            'recycled-polyester': 'Recycled polyester blend provides wrinkle resistance and easy care',
+            'tencel': 'Tencel lyocell fibers create luxurious hand feel with excellent moisture management',
+            'linen': 'Pure linen weave offers natural texture that improves with age and wear',
+            'recycled-wool': 'Reclaimed wool fibers maintain thermal properties while reducing environmental impact',
+            'peace-silk': 'Ethically sourced silk creates lustrous finish with natural protein-based resilience'
+        };
+
+        return materialNotes[material] || 
+               `${material} fabric selected for optimal sustainability and performance characteristics`;
     }
 
     // Calculate design cost
