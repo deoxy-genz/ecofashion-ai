@@ -5,7 +5,6 @@ class AIModelManager {
     constructor() {
         this.models = {
             sustainabilityPredictor: null,
-            demandForecaster: null,
             designGenerator: null
         };
         this.isInitialized = false;
@@ -20,7 +19,6 @@ class AIModelManager {
             // Load TensorFlow.js models
             await Promise.all([
                 this.loadSustainabilityModel(),
-                this.loadDemandForecastModel(),
                 this.initializeHuggingFace()
             ]);
             
@@ -111,90 +109,7 @@ class AIModelManager {
         };
     }
 
-    // Load demand forecasting model (LSTM for time series)
-    async loadDemandForecastModel() {
-        console.log('Loading demand forecasting model (LSTM)...');
-        
-        const model = tf.sequential({
-            layers: [
-                tf.layers.lstm({ units: 50, returnSequences: true, inputShape: [10, 5] }), // 10 timesteps, 5 features
-                tf.layers.dropout({ rate: 0.2 }),
-                tf.layers.lstm({ units: 50, returnSequences: false }),
-                tf.layers.dropout({ rate: 0.2 }),
-                tf.layers.dense({ units: 25, activation: 'relu' }),
-                tf.layers.dense({ units: 1, activation: 'linear' }) // Predict demand value
-            ]
-        });
 
-        model.compile({
-            optimizer: tf.train.adam(0.001),
-            loss: 'meanSquaredError',
-            metrics: ['mae']
-        });
-
-        // Generate synthetic time series data
-        const trainingData = this.generateDemandTrainingData(500);
-        
-        await model.fit(trainingData.inputs, trainingData.labels, {
-            epochs: 30,
-            batchSize: 16,
-            validationSplit: 0.2,
-            verbose: 0,
-            callbacks: {
-                onEpochEnd: (epoch, logs) => {
-                    if (epoch % 5 === 0) {
-                        console.log(`Demand Model - Epoch ${epoch}: loss = ${logs.loss.toFixed(4)}`);
-                    }
-                }
-            }
-        });
-
-        this.models.demandForecaster = model;
-        console.log('✅ Demand forecasting model trained');
-    }
-
-    // Generate synthetic time series data for demand forecasting
-    generateDemandTrainingData(samples) {
-        const sequences = [];
-        const labels = [];
-
-        for (let i = 0; i < samples; i++) {
-            const sequence = [];
-            const baseValue = Math.random() * 1000 + 500; // Base demand 500-1500
-            
-            // Create 10 timesteps with 5 features each
-            for (let t = 0; t < 10; t++) {
-                const seasonality = Math.sin(t * Math.PI / 5) * 0.3; // Seasonal pattern
-                const trend = t * 0.05; // Upward trend
-                const noise = (Math.random() - 0.5) * 0.1;
-                
-                const demand = baseValue * (1 + seasonality + trend + noise);
-                const marketing = Math.random() * 10000; // Marketing budget
-                const season = Math.floor(Math.random() * 4); // 0-3 for seasons
-                const sustainability = Math.random(); // Sustainability factor
-                const competition = Math.random(); // Competition index
-                
-                sequence.push([
-                    demand / 2000, // Normalize
-                    marketing / 10000,
-                    season / 4,
-                    sustainability,
-                    competition
-                ]);
-            }
-            
-            // Next period demand as label
-            const nextDemand = baseValue * (1 + Math.sin(10 * Math.PI / 5) * 0.3 + 10 * 0.05);
-            
-            sequences.push(sequence);
-            labels.push([nextDemand / 2000]);
-        }
-
-        return {
-            inputs: tf.tensor3d(sequences),
-            labels: tf.tensor2d(labels)
-        };
-    }
 
     // Initialize Hugging Face API for design generation
     async initializeHuggingFace() {
@@ -319,105 +234,7 @@ class AIModelManager {
         return recommendations;
     }
 
-    // Real-time demand prediction using LSTM
-    async predictDemand(demandData) {
-        if (!this.models.demandForecaster) {
-            throw new Error('Demand forecasting model not loaded');
-        }
 
-        // Prepare time series input (last 10 periods)
-        const timeSeriesData = this.prepareTimeSeriesInput(demandData);
-        const inputTensor = tf.tensor3d([timeSeriesData]);
-        
-        // Predict using LSTM model
-        const prediction = this.models.demandForecaster.predict(inputTensor);
-        const normalizedDemand = (await prediction.data())[0];
-        const predictedDemand = Math.round(normalizedDemand * 2000); // Denormalize
-        
-        // Cleanup
-        inputTensor.dispose();
-        prediction.dispose();
-
-        // Calculate confidence based on data quality
-        const confidence = this.calculatePredictionConfidence(demandData);
-
-        return {
-            predictedDemand,
-            confidence,
-            trendAnalysis: this.analyzeTrend(timeSeriesData),
-            recommendations: this.generateDemandRecommendations(predictedDemand, demandData)
-        };
-    }
-
-    // Prepare time series input for LSTM
-    prepareTimeSeriesInput(demandData) {
-        const sequence = [];
-        const baseSales = demandData.baseSales || 1000;
-        const marketing = demandData.marketingBudget || 5000;
-        const seasonMap = { 'spring': 0, 'summer': 1, 'fall': 2, 'winter': 3 };
-        const season = seasonMap[demandData.season] || 0;
-        const sustainability = demandData.sustainabilityFocus === 'yes' ? 1 : 0;
-
-        // Generate 10 timesteps
-        for (let t = 0; t < 10; t++) {
-            const seasonality = Math.sin(t * Math.PI / 5) * 0.2;
-            const demand = baseSales * (1 + seasonality - t * 0.01);
-            
-            sequence.push([
-                demand / 2000,
-                marketing / 10000,
-                season / 4,
-                sustainability,
-                Math.random() * 0.5 + 0.5 // Competition factor
-            ]);
-        }
-
-        return sequence;
-    }
-
-    // Calculate prediction confidence
-    calculatePredictionConfidence(demandData) {
-        let confidence = 0.75; // Base confidence
-
-        if (demandData.baseSales && demandData.baseSales > 100) confidence += 0.05;
-        if (demandData.marketingBudget && demandData.marketingBudget > 1000) confidence += 0.05;
-        if (demandData.season) confidence += 0.05;
-        if (demandData.category) confidence += 0.05;
-        
-        return Math.min(confidence + Math.random() * 0.05, 0.95);
-    }
-
-    // Analyze demand trend
-    analyzeTrend(timeSeriesData) {
-        const recent = timeSeriesData.slice(-3).map(d => d[0]);
-        const avg = recent.reduce((a, b) => a + b, 0) / recent.length;
-        const first = recent[0];
-        const last = recent[recent.length - 1];
-
-        if (last > first * 1.1) return 'Increasing';
-        if (last < first * 0.9) return 'Decreasing';
-        return 'Stable';
-    }
-
-    // Generate demand-based recommendations
-    generateDemandRecommendations(predictedDemand, demandData) {
-        const recommendations = [];
-
-        if (predictedDemand > (demandData.baseSales || 1000) * 1.5) {
-            recommendations.push('High demand predicted - consider increasing production capacity');
-            recommendations.push('Stock up on sustainable materials to meet expected demand');
-        } else if (predictedDemand < (demandData.baseSales || 1000) * 0.8) {
-            recommendations.push('Lower demand expected - optimize inventory to reduce waste');
-        }
-
-        if (demandData.sustainabilityFocus === 'yes') {
-            recommendations.push('Sustainability focus increases demand by 15-20%');
-        }
-
-        recommendations.push('Monitor real-time trends for continuous optimization');
-
-        return recommendations;
-    }
 
     // Generate fashion design using Hugging Face API (GPT-2 or similar)
     async generateDesign(designParams) {

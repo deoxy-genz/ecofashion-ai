@@ -1,26 +1,21 @@
 # Generative AI in Fashion Sustainability
 
-A comprehensive web application that uses **real AI models** powered by **TensorFlow.js** to revolutionize fashion sustainability through design generation, sustainability scoring, and demand prediction.
+A comprehensive web application that uses **real AI models** powered by **TensorFlow.js** to revolutionize fashion sustainability through design generation and sustainability scoring.
 
 ## 🤖 **Real AI Models**
 
 This project now includes **actual machine learning models** running in the browser:
 
 ### **1. Sustainability Prediction Model**
+
 - **Type**: Feedforward Neural Network
 - **Architecture**: 7 inputs → 64 → 32 → 16 → 1 output
 - **Training**: 1000 synthetic samples, 50 epochs
 - **Features**: Material type, recyclability, carbon, water, durability, organic status, production method
 - **Accuracy**: 85-95% confidence on predictions
 
-### **2. Demand Forecasting Model**
-- **Type**: LSTM (Long Short-Term Memory) Neural Network
-- **Architecture**: LSTM(50) → Dropout → LSTM(50) → Dense(25) → Dense(1)
-- **Training**: 500 time-series sequences, 30 epochs
-- **Features**: Historical sales, seasonality, marketing spend, sustainability focus, competition
-- **Accuracy**: 75-95% confidence with trend analysis
+### **2. Design Generation (Optional)**
 
-### **3. Design Generation (Optional)**
 - **Integration**: Hugging Face API (GPT-2)
 - **Fallback**: Enhanced local generation with TensorFlow.js
 - **Features**: AI-powered design descriptions and material recommendations
@@ -57,15 +52,7 @@ This project now includes **actual machine learning models** running in the brow
 - Water usage evaluation
 - Comprehensive scoring system (0-100)
 
-### 4. **Demand Prediction System**
-
-- AI-powered demand forecasting
-- Historical data analysis
-- Seasonal trend consideration
-- Marketing impact assessment
-- Sustainability-focused predictions
-
-### 5. **Weather Integration**
+### 4. **Weather Integration**
 
 - Real-time weather display
 - Weather-based fashion recommendations
@@ -93,8 +80,7 @@ Mini_project/
 │   └── weather.js           # Weather API integration
 ├── pages/
 │   ├── generate-design.html  # AI design generation
-│   ├── sustainability-score.html # Sustainability analysis
-│   └── demand-prediction.html # Demand forecasting
+│   └── sustainability-score.html # Sustainability analysis
 ├── images/                   # Image assets (placeholder)
 ├── .github/
 │   └── copilot-instructions.md
