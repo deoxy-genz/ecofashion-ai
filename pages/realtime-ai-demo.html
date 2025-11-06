@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time AI Demo - EcoFashion AI</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <!-- TensorFlow.js for Real AI Models -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
+    <style>
+        .realtime-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .demo-section h2 {
+            color: #2d5016;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-card h3 {
+            font-size: 32px;
+            margin: 10px 0;
+        }
+
+        .metric-card p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .log-output {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #4CAF50;
+            padding-left: 10px;
+        }
+
+        .btn-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+            transition: transform 0.2s;
+        }
+
+        .btn-demo:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-demo:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-indicator.active {
+            background: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.inactive {
+            background: #999;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .stream-output {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            min-height: 100px;
+        }
+
+        .stream-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-left: 4px solid #4CAF50;
+            border-radius: 4px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>🌱 EcoFashion AI</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="generate-design.html" class="nav-link">Generate Design</a>
+                <a href="sustainability-score.html" class="nav-link">Sustainability Score</a>
+                <a href="realtime-ai-demo.html" class="nav-link active">Real-Time AI</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="realtime-container">
+            <h1 class="hero-title">Real-Time AI Model Demonstration</h1>
+            <p class="hero-subtitle">Experience live AI predictions, model training visualization, and streaming responses</p>
+
+            <!-- Model Status -->
+            <div class="demo-section">
+                <h2>🤖 Model Status</h2>
+                <div id="model-status">
+                    <p><span class="status-indicator inactive" id="status-dot"></span><span id="status-text">Initializing...</span></p>
+                </div>
+                <div class="metrics-grid" id="metrics-grid">
+                    <div class="metric-card">
+                        <p>Model Accuracy</p>
+                        <h3 id="accuracy-metric">--</h3>
+                    </div>
+                    <div class="metric-card">
+                        <p>Training Epochs</p>
+                        <h3 id="epochs-metric">--</h3>
+                    </div>
+                    <div class="metric-card">
+                        <p>Current Loss</p>
+                        <h3 id="loss-metric">--</h3>
+                    </div>
+                    <div class="metric-card">
+                        <p>Predictions Made</p>
+                        <h3 id="predictions-metric">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Progress -->
+            <div class="demo-section">
+                <h2>📊 Live Training Progress</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="training-progress">0%</div>
+                </div>
+                <div class="log-output" id="training-log">
+                    <div class="log-entry">Waiting for AI models to initialize...</div>
+                </div>
+            </div>
+
+            <!-- Real-Time Predictions -->
+            <div class="demo-section">
+                <h2>⚡ Real-Time Predictions</h2>
+                <button class="btn-demo" onclick="runSinglePrediction()">Run Single Prediction</button>
+                <button class="btn-demo" onclick="runStreamingPredictions()">Stream Multiple Predictions</button>
+                <button class="btn-demo" onclick="clearPredictions()">Clear Results</button>
+                
+                <div class="stream-output" id="prediction-output">
+                    <p style="color: #666;">Click a button above to see real-time AI predictions...</p>
+                </div>
+            </div>
+
+            <!-- Design Generation Streaming -->
+            <div class="demo-section">
+                <h2>🎨 Streaming Design Generation</h2>
+                <button class="btn-demo" onclick="streamDesignGeneration()">Stream Design Generation</button>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="design-progress">0%</div>
+                </div>
+                
+                <div class="stream-output" id="design-output">
+                    <p style="color: #666;">Click above to watch AI generate a design in real-time...</p>
+                </div>
+            </div>
+
+            <!-- Model Controls -->
+            <div class="demo-section">
+                <h2>🔧 Model Controls</h2>
+                <button class="btn-demo" onclick="retrainModel()">Retrain Model</button>
+                <button class="btn-demo" onclick="clearCache()">Clear Cache</button>
+                <button class="btn-demo" onclick="exportModel()">Export Model</button>
+                <button class="btn-demo" onclick="showMetrics()">Show Metrics</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/ai-models.js"></script>
+    <script>
+        let predictionCount = 0;
+
+        // Listen for AI models ready event
+        window.addEventListener('ai-models-ready', () => {
+            console.log('✅ AI models are ready!');
+            updateModelStatus(true);
+            updateMetrics();
+        });
+
+        // Listen for training progress
+        window.addEventListener('ai-training-progress', (e) => {
+            const data = e.detail;
+            updateTrainingProgress(data);
+        });
+
+        // Listen for training complete
+        window.addEventListener('ai-training-complete', (e) => {
+            addLog(`✅ ${e.detail.model} model training complete!`);
+        });
+
+        // Listen for prediction updates
+        window.addEventListener('ai-prediction-update', (e) => {
+            const data = e.detail;
+            addLog(`🔮 Real-time prediction: Score ${data.result.overallScore}/100`);
+        });
+
+        function updateModelStatus(isReady) {
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+            
+            if (isReady) {
+                statusDot.classList.remove('inactive');
+                statusDot.classList.add('active');
+                statusText.textContent = 'AI Models Active & Ready';
+            } else {
+                statusDot.classList.remove('active');
+                statusDot.classList.add('inactive');
+                statusText.textContent = 'Initializing...';
+            }
+        }
+
+        function updateMetrics() {
+            const metrics = window.aiModels.getModelMetrics();
+            if (metrics) {
+                document.getElementById('accuracy-metric').textContent = metrics.modelAccuracy;
+                document.getElementById('epochs-metric').textContent = metrics.trainingEpochs;
+                document.getElementById('loss-metric').textContent = metrics.currentLoss.toFixed(4);
+            }
+        }
+
+        function updateTrainingProgress(data) {
+            const progressBar = document.getElementById('training-progress');
+            progressBar.style.width = data.progress + '%';
+            progressBar.textContent = data.progress + '%';
+            
+            addLog(`Epoch ${data.epoch}/${data.totalEpochs} - Loss: ${data.loss} - Progress: ${data.progress}%`);
+        }
+
+        function addLog(message) {
+            const logOutput = document.getElementById('training-log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logOutput.appendChild(entry);
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+
+        async function runSinglePrediction() {
+            const testItem = {
+                material: 'organic-cotton',
+                production: 'fair-trade',
+                quantity: 1
+            };
+
+            try {
+                const result = await window.aiModels.predictSustainabilityScore(testItem, { realtime: true });
+                predictionCount++;
+                document.getElementById('predictions-metric').textContent = predictionCount;
+                
+                displayPrediction(result, 'Single Prediction');
+                addLog(`✅ Prediction complete: ${result.overallScore}/100 (${result.confidence.toFixed(2)} confidence)`);
+            } catch (error) {
+                addLog(`❌ Error: ${error.message}`);
+            }
+        }
+
+        async function runStreamingPredictions() {
+            const testItems = [
+                { material: 'organic-cotton', production: 'local', quantity: 1 },
+                { material: 'hemp', production: 'fair-trade', quantity: 2 },
+                { material: 'bamboo', production: 'local', quantity: 1 },
+                { material: 'recycled-polyester', production: 'mass-production', quantity: 3 }
+            ];
+
+            const output = document.getElementById('prediction-output');
+            output.innerHTML = '<p style="color: #666;">Streaming predictions...</p>';
+
+            for await (const result of window.aiModels.streamPredictions(testItems)) {
+                predictionCount++;
+                document.getElementById('predictions-metric').textContent = predictionCount;
+                displayPrediction(result, `Stream Item #${predictionCount}`);
+            }
+
+            addLog('✅ Streaming complete!');
+        }
+
+        function displayPrediction(result, title) {
+            const output = document.getElementById('prediction-output');
+            if (output.querySelector('p')) {
+                output.innerHTML = '';
+            }
+
+            const item = document.createElement('div');
+            item.className = 'stream-item';
+            item.innerHTML = `
+                <strong>${title}</strong><br>
+                Score: <strong style="color: #4CAF50;">${result.overallScore}/100</strong> |
+                Carbon: ${result.carbonFootprint} kg CO₂ |
+                Water: ${result.waterUsage} L |
+                Confidence: ${(result.confidence * 100).toFixed(1)}%
+            `;
+            output.appendChild(item);
+        }
+
+        function clearPredictions() {
+            document.getElementById('prediction-output').innerHTML = '<p style="color: #666;">Cleared. Ready for new predictions...</p>';
+            addLog('🗑️ Prediction output cleared');
+        }
+
+        async function streamDesignGeneration() {
+            const designParams = {
+                clothingType: 'shirt',
+                material: 'organic-cotton',
+                primaryColor: 'green',
+                secondaryColor: 'white',
+                size: 'M',
+                season: 'spring'
+            };
+
+            const progressBar = document.getElementById('design-progress');
+            const output = document.getElementById('design-output');
+            output.innerHTML = '';
+
+            for await (const update of window.aiModels.streamDesignGeneration(designParams)) {
+                progressBar.style.width = update.progress + '%';
+                progressBar.textContent = update.progress + '%';
+
+                const item = document.createElement('div');
+                item.className = 'stream-item';
+                item.innerHTML = `<strong>${update.message}</strong>`;
+                output.appendChild(item);
+
+                addLog(update.message);
+
+                if (update.design) {
+                    item.innerHTML += `<br><br>
+                        <strong>✅ ${update.design.name}</strong><br>
+                        Sustainability Score: ${update.design.sustainabilityScore}/100<br>
+                        Estimated Cost: $${update.design.estimatedCost}<br>
+                        Generated with: ${update.design.generatedWith}
+                    `;
+                }
+            }
+        }
+
+        async function retrainModel() {
+            addLog('🔄 Retraining model with new data...');
+            try {
+                await window.aiModels.retrainModel([]);
+                updateMetrics();
+                addLog('✅ Model retrained successfully!');
+            } catch (error) {
+                addLog(`❌ Retrain error: ${error.message}`);
+            }
+        }
+
+        function clearCache() {
+            window.aiModels.clearCache();
+            addLog('🗑️ Prediction cache cleared');
+        }
+
+        async function exportModel() {
+            addLog('📦 Exporting model...');
+            const success = await window.aiModels.exportModel();
+            if (success) {
+                addLog('✅ Model exported successfully!');
+            } else {
+                addLog('❌ Export failed');
+            }
+        }
+
+        function showMetrics() {
+            const metrics = window.aiModels.getModelMetrics();
+            if (metrics) {
+                const output = document.getElementById('prediction-output');
+                output.innerHTML = `
+                    <div class="stream-item">
+                        <h3>📊 Detailed Model Metrics</h3>
+                        <p><strong>Current Loss:</strong> ${metrics.currentLoss.toFixed(6)}</p>
+                        <p><strong>Current MAE:</strong> ${metrics.currentMAE.toFixed(6)}</p>
+                        <p><strong>Average Loss:</strong> ${metrics.averageLoss.toFixed(6)}</p>
+                        <p><strong>Model Accuracy:</strong> ${metrics.modelAccuracy}</p>
+                        <p><strong>Training Epochs:</strong> ${metrics.trainingEpochs}</p>
+                        <p><strong>Last Updated:</strong> ${new Date(metrics.lastUpdated).toLocaleString()}</p>
+                    </div>
+                `;
+                addLog('📊 Model metrics displayed');
+            }
+        }
+
+        // Initialize on page load
+        if (typeof tf !== 'undefined' && window.aiModels) {
+            if (window.aiModels.isInitialized) {
+                updateModelStatus(true);
+                updateMetrics();
+                addLog('✅ AI Models already initialized');
+            } else {
+                addLog('⏳ Waiting for AI models to initialize...');
+            }
+        }
+    </script>
+</body>
+</html>
