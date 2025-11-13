@@ -660,6 +660,94 @@
                         <rect x="115" y="140" width="35" height="40" fill="none" stroke="#666" stroke-width="1"/>
                         <text x="100" y="250" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">Jacket Design</text>
                     </svg>
+                `,
+                'sweater': `
+                    <svg viewBox="0 0 200 260" class="design-svg">
+                        <defs>
+                            <linearGradient id="fabricGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:${baseColor};stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:${accentColor};stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Body -->
+                        <path d="M 60 70 L 50 90 L 50 210 L 150 210 L 150 90 L 140 70 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <!-- Ribbed bottom -->
+                        <rect x="50" y="210" width="100" height="15" fill="${accentColor}" stroke="#333" stroke-width="1.5"/>
+                        <line x1="50" y1="213" x2="150" y2="213" stroke="#555" stroke-width="0.5"/>
+                        <line x1="50" y1="216" x2="150" y2="216" stroke="#555" stroke-width="0.5"/>
+                        <line x1="50" y1="219" x2="150" y2="219" stroke="#555" stroke-width="0.5"/>
+                        <line x1="50" y1="222" x2="150" y2="222" stroke="#555" stroke-width="0.5"/>
+                        <!-- Sleeves -->
+                        <path d="M 60 70 L 30 95 L 30 180 L 40 185 L 50 170 Z" fill="${baseColor}" stroke="#333" stroke-width="1.5"/>
+                        <path d="M 140 70 L 170 95 L 170 180 L 160 185 L 150 170 Z" fill="${baseColor}" stroke="#333" stroke-width="1.5"/>
+                        <!-- Ribbed cuffs -->
+                        <rect x="30" y="180" width="10" height="10" fill="${accentColor}" stroke="#333" stroke-width="1"/>
+                        <rect x="160" y="180" width="10" height="10" fill="${accentColor}" stroke="#333" stroke-width="1"/>
+                        <!-- Crew neck -->
+                        <ellipse cx="100" cy="70" rx="22" ry="12" fill="${accentColor}" stroke="#333" stroke-width="1.5"/>
+                        <line x1="50" y1="73" x2="150" y2="73" stroke="#555" stroke-width="0.5"/>
+                        <!-- Knit texture -->
+                        <line x1="100" y1="90" x2="100" y2="210" stroke="#999" stroke-width="0.3" stroke-dasharray="3,3"/>
+                        <line x1="80" y1="90" x2="80" y2="210" stroke="#999" stroke-width="0.3" stroke-dasharray="3,3"/>
+                        <line x1="120" y1="90" x2="120" y2="210" stroke="#999" stroke-width="0.3" stroke-dasharray="3,3"/>
+                        <text x="100" y="245" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">Sweater Design</text>
+                    </svg>
+                `,
+                'skirt': `
+                    <svg viewBox="0 0 200 240" class="design-svg">
+                        <defs>
+                            <linearGradient id="fabricGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:${baseColor};stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:${accentColor};stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Waistband -->
+                        <rect x="70" y="60" width="60" height="12" fill="${accentColor}" stroke="#333" stroke-width="1.5"/>
+                        <!-- Skirt body (A-line) -->
+                        <path d="M 70 72 L 45 200 L 155 200 L 130 72 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <!-- Side seams -->
+                        <line x1="70" y1="72" x2="45" y2="200" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+                        <line x1="130" y1="72" x2="155" y2="200" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+                        <!-- Center seam -->
+                        <line x1="100" y1="72" x2="100" y2="200" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+                        <!-- Hem detail -->
+                        <line x1="45" y1="195" x2="155" y2="195" stroke="#666" stroke-width="1"/>
+                        <!-- Waistband detail -->
+                        <line x1="75" y1="66" x2="125" y2="66" stroke="#555" stroke-width="0.5"/>
+                        <text x="100" y="225" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">Skirt Design</text>
+                    </svg>
+                `,
+                'shorts': `
+                    <svg viewBox="0 0 200 220" class="design-svg">
+                        <defs>
+                            <linearGradient id="fabricGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:${baseColor};stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:${accentColor};stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Waistband -->
+                        <rect x="60" y="60" width="80" height="15" fill="${accentColor}" stroke="#333" stroke-width="1.5"/>
+                        <!-- Belt loops -->
+                        <rect x="75" y="57" width="4" height="6" fill="#666"/>
+                        <rect x="98" y="57" width="4" height="6" fill="#666"/>
+                        <rect x="121" y="57" width="4" height="6" fill="#666"/>
+                        <!-- Left leg -->
+                        <path d="M 60 75 L 65 110 L 70 160 L 90 160 L 95 110 L 100 75 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <!-- Right leg -->
+                        <path d="M 100 75 L 105 110 L 110 160 L 130 160 L 135 110 L 140 75 Z" fill="url(#fabricGrad)" stroke="#333" stroke-width="1.5"/>
+                        <!-- Inseam -->
+                        <line x1="100" y1="75" x2="100" y2="160" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+                        <!-- Cargo pockets -->
+                        <rect x="72" y="95" width="15" height="25" fill="none" stroke="#666" stroke-width="1" rx="2"/>
+                        <rect x="113" y="95" width="15" height="25" fill="none" stroke="#666" stroke-width="1" rx="2"/>
+                        <!-- Pocket flaps -->
+                        <line x1="72" y1="100" x2="87" y2="100" stroke="#666" stroke-width="1.5"/>
+                        <line x1="113" y1="100" x2="128" y2="100" stroke="#666" stroke-width="1.5"/>
+                        <!-- Hem -->
+                        <line x1="70" y1="157" x2="90" y2="157" stroke="#555" stroke-width="1"/>
+                        <line x1="110" y1="157" x2="130" y2="157" stroke="#555" stroke-width="1"/>
+                        <text x="100" y="185" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">Shorts Design</text>
+                    </svg>
                 `
             };
 
