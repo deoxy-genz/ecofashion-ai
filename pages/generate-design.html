@@ -58,7 +58,6 @@
                                 <option value="jacket">Jacket</option>
                                 <option value="sweater">Sweater</option>
                                 <option value="shorts">Shorts</option>
-                                <option value="blouse">Blouse</option>
                             </select>
                         </div>
 
@@ -364,8 +363,7 @@
                 'jacket': ['Bomber style', 'Denim inspired', 'Blazer cut', 'Utility pockets', 'Oversized fit'],
                 'sweater': ['Cable knit', 'Ribbed texture', 'Fair isle', 'Chunky knit', 'Waffle weave'],
                 'skirt': ['Pleated midi', 'Pencil fitted', 'Circle full', 'Tiered layers', 'Asymmetric hem'],
-                'shorts': ['Bermuda length', 'Athletic cut', 'Paperbag waist', 'Cargo utility', 'Tailored fit'],
-                'blouse': ['Puff sleeve', 'Wrap front', 'Peter pan collar', 'Ruffle detail', 'Peasant style']
+                'shorts': ['Bermuda length', 'Athletic cut', 'Paperbag waist', 'Cargo utility', 'Tailored fit']
             };
             const typePatterns = patterns[type] || ['Classic design'];
             return typePatterns[Math.floor(Math.random() * typePatterns.length)];
@@ -394,8 +392,7 @@
                 'jacket': ['Functional buttons', 'Interior pockets', 'Adjustable cuffs', 'Vented back', 'Quilted lining'],
                 'sweater': ['Ribbed cuffs', 'Mock neck', 'Side slits', 'Drop shoulder', 'Thumbholes'],
                 'skirt': ['Invisible zip', 'Elastic waist', 'Side slits', 'Lining', 'Pockets'],
-                'shorts': ['Drawstring waist', 'Cargo pockets', 'Rolled cuffs', 'Zip fly', 'Contrast trim'],
-                'blouse': ['Mother-of-pearl buttons', 'Cuffed sleeves', 'Pleated front', 'Tie neck', 'Gathered shoulders']
+                'shorts': ['Drawstring waist', 'Cargo pockets', 'Rolled cuffs', 'Zip fly', 'Contrast trim']
             };
             const typeDetails = details[type] || ['Classic details'];
             const selectedDetails = [];
