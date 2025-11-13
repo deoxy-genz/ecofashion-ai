@@ -252,26 +252,66 @@
         }
 
         async function createEnhancedDesignData(type, material, color, size, aiDesign) {
-            const designs = {
-                't-shirt': '👕',
-                'dress': '👗',
-                'pants': '👖',
-                'skirt': '👗',
-                'jacket': '🧥',
-                'sweater': '🧶',
-                'shorts': '🩳',
-                'blouse': '👚'
-            };
-
+            // Generate unique design ID and timestamp
+            const designId = `EF-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+            
             const materialInfo = {
-                'organic-cotton': { sustainability: 85, description: 'Grown without harmful pesticides, uses 91% less water than conventional cotton' },
-                'recycled-polyester': { sustainability: 75, description: 'Made from recycled plastic bottles, reduces waste and energy consumption' },
-                'hemp': { sustainability: 95, description: 'Naturally pest-resistant, improves soil health, biodegradable' },
-                'bamboo': { sustainability: 80, description: 'Fast-growing, naturally antibacterial, soft and breathable' },
-                'tencel': { sustainability: 88, description: 'Made from sustainably sourced wood, biodegradable, moisture-wicking' },
-                'linen': { sustainability: 82, description: 'Made from flax plant, durable, gets softer with each wash' },
-                'recycled-wool': { sustainability: 78, description: 'Repurposed wool fibers, reduces landfill waste, maintains quality' },
-                'peace-silk': { sustainability: 70, description: 'Cruelty-free silk production, allows silkworms to complete life cycle' }
+                'organic-cotton': { 
+                    sustainability: 85, 
+                    description: 'Grown without harmful pesticides, uses 91% less water than conventional cotton',
+                    texture: 'soft-weave',
+                    weight: 'medium',
+                    drape: 'moderate'
+                },
+                'recycled-polyester': { 
+                    sustainability: 75, 
+                    description: 'Made from recycled plastic bottles, reduces waste and energy consumption',
+                    texture: 'smooth-synthetic',
+                    weight: 'light',
+                    drape: 'flowing'
+                },
+                'hemp': { 
+                    sustainability: 95, 
+                    description: 'Naturally pest-resistant, improves soil health, biodegradable',
+                    texture: 'textured-natural',
+                    weight: 'medium-heavy',
+                    drape: 'structured'
+                },
+                'bamboo': { 
+                    sustainability: 80, 
+                    description: 'Fast-growing, naturally antibacterial, soft and breathable',
+                    texture: 'silky-smooth',
+                    weight: 'light-medium',
+                    drape: 'flowing'
+                },
+                'tencel': { 
+                    sustainability: 88, 
+                    description: 'Made from sustainably sourced wood, biodegradable, moisture-wicking',
+                    texture: 'luxe-smooth',
+                    weight: 'light',
+                    drape: 'elegant'
+                },
+                'linen': { 
+                    sustainability: 82, 
+                    description: 'Made from flax plant, durable, gets softer with each wash',
+                    texture: 'crisp-natural',
+                    weight: 'medium',
+                    drape: 'relaxed'
+                },
+                'recycled-wool': { 
+                    sustainability: 78, 
+                    description: 'Repurposed wool fibers, reduces landfill waste, maintains quality',
+                    texture: 'warm-knit',
+                    weight: 'heavy',
+                    drape: 'structured'
+                },
+                'peace-silk': { 
+                    sustainability: 70, 
+                    description: 'Cruelty-free silk production, allows silkworms to complete life cycle',
+                    texture: 'luxurious-smooth',
+                    weight: 'light',
+                    drape: 'flowing'
+                }
             };
 
             const colorImpact = {
@@ -282,18 +322,106 @@
                 'natural': 'Natural dyes from plants and minerals'
             };
 
+            // Generate unique design features based on type and material
+            const uniqueFeatures = generateUniqueFeatures(type, material, color);
+
             return {
-                icon: designs[type] || '👔',
+                designId: designId,
                 type: type.replace('-', ' ').toUpperCase(),
                 material: material.replace('-', ' ').toUpperCase(),
+                materialTexture: materialInfo[material].texture,
+                materialWeight: materialInfo[material].weight,
+                materialDrape: materialInfo[material].drape,
                 sustainability: materialInfo[material].sustainability,
                 materialDescription: materialInfo[material].description,
                 colorImpact: colorImpact[color] || 'Sustainable coloring process',
-                wasteReduction: Math.floor(Math.random() * 15) + 25, // 25-40% waste reduction
-                carbonFootprint: Math.floor(Math.random() * 30) + 40, // 40-70% reduction
-                waterSavings: Math.floor(Math.random() * 25) + 50, // 50-75% savings
-                sizeRange: size
+                wasteReduction: Math.floor(Math.random() * 15) + 25,
+                carbonFootprint: Math.floor(Math.random() * 30) + 40,
+                waterSavings: Math.floor(Math.random() * 25) + 50,
+                sizeRange: size,
+                uniqueFeatures: uniqueFeatures,
+                aiFeatures: aiDesign
             };
+        }
+
+        // Generate unique design features for each garment
+        function generateUniqueFeatures(type, material, color) {
+            const features = {
+                pattern: generatePattern(type, material),
+                stitching: generateStitching(material),
+                details: generateDetails(type),
+                finishing: generateFinishing(material),
+                uniqueId: Math.random().toString(36).substr(2, 9)
+            };
+            return features;
+        }
+
+        function generatePattern(type, material) {
+            const patterns = {
+                't-shirt': ['Classic crew neck', 'V-neck modern', 'Henley button', 'Raglan sleeve', 'Baseball style'],
+                'dress': ['A-line silhouette', 'Wrap design', 'Shift modern', 'Fit-and-flare', 'Empire waist'],
+                'pants': ['Straight leg', 'Tapered fit', 'Wide leg', 'Cropped ankle', 'High-waisted'],
+                'jacket': ['Bomber style', 'Denim inspired', 'Blazer cut', 'Utility pockets', 'Oversized fit'],
+                'sweater': ['Cable knit', 'Ribbed texture', 'Fair isle', 'Chunky knit', 'Waffle weave'],
+                'skirt': ['Pleated midi', 'Pencil fitted', 'Circle full', 'Tiered layers', 'Asymmetric hem'],
+                'shorts': ['Bermuda length', 'Athletic cut', 'Paperbag waist', 'Cargo utility', 'Tailored fit'],
+                'blouse': ['Puff sleeve', 'Wrap front', 'Peter pan collar', 'Ruffle detail', 'Peasant style']
+            };
+            const typePatterns = patterns[type] || ['Classic design'];
+            return typePatterns[Math.floor(Math.random() * typePatterns.length)];
+        }
+
+        function generateStitching(material) {
+            const stitchTypes = {
+                'organic-cotton': ['Flat-felled seams', 'French seams', 'Double-needle topstitch'],
+                'recycled-polyester': ['Overlock edges', 'Zigzag finish', 'Bound seams'],
+                'hemp': ['Reinforced seams', 'Triple-stitch', 'Welt seams'],
+                'bamboo': ['Delicate French seams', 'Narrow hem', 'Bias binding'],
+                'tencel': ['Clean finish seams', 'Hong Kong seams', 'Mock flat-felled'],
+                'linen': ['Relaxed seams', 'Raw edge detail', 'Hand-stitched accents'],
+                'recycled-wool': ['Serged edges', 'Blanket stitch', 'Reinforced stress points'],
+                'peace-silk': ['Hand-rolled hem', 'French seams', 'Delicate whipstitch']
+            };
+            const stitches = stitchTypes[material] || ['Standard seams'];
+            return stitches[Math.floor(Math.random() * stitches.length)];
+        }
+
+        function generateDetails(type) {
+            const details = {
+                't-shirt': ['Contrast neck binding', 'Side vents', 'Curved hem', 'Pocket detail', 'Raw edge finish'],
+                'dress': ['Hidden pockets', 'Button back', 'Adjustable straps', 'Belt loops', 'Gathered waist'],
+                'pants': ['Slant pockets', 'Zip fly', 'Belt loops', 'Cuffed hem', 'Welt pockets'],
+                'jacket': ['Functional buttons', 'Interior pockets', 'Adjustable cuffs', 'Vented back', 'Quilted lining'],
+                'sweater': ['Ribbed cuffs', 'Mock neck', 'Side slits', 'Drop shoulder', 'Thumbholes'],
+                'skirt': ['Invisible zip', 'Elastic waist', 'Side slits', 'Lining', 'Pockets'],
+                'shorts': ['Drawstring waist', 'Cargo pockets', 'Rolled cuffs', 'Zip fly', 'Contrast trim'],
+                'blouse': ['Mother-of-pearl buttons', 'Cuffed sleeves', 'Pleated front', 'Tie neck', 'Gathered shoulders']
+            };
+            const typeDetails = details[type] || ['Classic details'];
+            const selectedDetails = [];
+            const numDetails = Math.floor(Math.random() * 2) + 2; // 2-3 details
+            for (let i = 0; i < numDetails; i++) {
+                const detail = typeDetails[Math.floor(Math.random() * typeDetails.length)];
+                if (!selectedDetails.includes(detail)) {
+                    selectedDetails.push(detail);
+                }
+            }
+            return selectedDetails.join(', ');
+        }
+
+        function generateFinishing(material) {
+            const finishes = {
+                'organic-cotton': ['Pre-washed soft finish', 'Enzyme wash', 'Stone wash effect'],
+                'recycled-polyester': ['Heat-set crease', 'Anti-static treatment', 'Water-resistant coating'],
+                'hemp': ['Softened with enzymes', 'Natural finish', 'Garment dyed'],
+                'bamboo': ['Silky smooth finish', 'Anti-microbial treatment', 'Moisture-wicking finish'],
+                'tencel': ['Peach skin finish', 'Wrinkle-resistant', 'Luxe drape enhancement'],
+                'linen': ['Relaxed natural finish', 'Slub texture preserved', 'Sun-bleached effect'],
+                'recycled-wool': ['Boiled wool finish', 'Felted texture', 'Pill-resistant treatment'],
+                'peace-silk': ['Hand-finished edges', 'Natural luster', 'Soft hand feel']
+            };
+            const materialFinishes = finishes[material] || ['Standard finish'];
+            return materialFinishes[Math.floor(Math.random() * materialFinishes.length)];
         }
 
         function displayDesign(data) {
@@ -329,13 +457,49 @@
             }
 
             detailsDiv.innerHTML = `
-                <h3>AI-Generated ${data.type} Design</h3>
+                <div class="design-header">
+                    <h3>AI-Generated ${data.type} Design</h3>
+                    <div class="design-id">Design ID: <code>${data.designId || 'EF-' + Date.now()}</code></div>
+                </div>
+                
                 <p class="design-description">
-                    This AI-generated design uses <strong>${data.material}</strong> and incorporates 
-                    sustainable design principles with advanced pattern engineering for minimal environmental impact.
+                    This AI-generated <strong>${data.uniqueFeatures?.pattern || 'unique'}</strong> ${data.type.toLowerCase()} 
+                    uses premium <strong>${data.material}</strong> with ${data.materialWeight} weight and 
+                    ${data.materialDrape} drape characteristics, incorporating sustainable design principles 
+                    with advanced pattern engineering for minimal environmental impact.
                 </p>
                 
                 ${aiFeaturesHtml}
+                
+                <div class="unique-features-section">
+                    <h4>🎨 Unique Design Features</h4>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <span class="feature-label">Pattern Style</span>
+                            <span class="feature-value">${data.uniqueFeatures?.pattern || 'Classic design'}</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-label">Stitching Method</span>
+                            <span class="feature-value">${data.uniqueFeatures?.stitching || 'Standard seams'}</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-label">Details</span>
+                            <span class="feature-value">${data.uniqueFeatures?.details || 'Classic details'}</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-label">Finishing</span>
+                            <span class="feature-value">${data.uniqueFeatures?.finishing || 'Standard finish'}</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-label">Fabric Texture</span>
+                            <span class="feature-value">${data.materialTexture || 'Natural'}</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-label">Fabric Weight</span>
+                            <span class="feature-value">${data.materialWeight || 'Medium'}</span>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="impact-metrics">
                     <div class="metric">
@@ -356,18 +520,21 @@
                 </div>
 
                 <div class="material-info">
-                    <h4>Material Specifications</h4>
+                    <h4>📋 Material Specifications</h4>
                     <p><strong>Primary Fabric:</strong> ${data.material}</p>
                     <p>${data.materialDescription}</p>
+                    <p><strong>Fabric Drape:</strong> ${data.materialDrape || 'Natural'} drape with ${data.materialTexture || 'standard'} texture</p>
                     <p><strong>Size Range:</strong> ${data.sizeRange}</p>
                     <p><strong>Color Impact:</strong> ${data.colorImpact}</p>
                 </div>
 
                 <div class="design-features">
-                    <h4>Technical Design Features</h4>
+                    <h4>✨ Technical Design Features</h4>
                     <ul>
-                        <li>Zero-waste pattern design with optimized cutting layout</li>
-                        <li>Reinforced construction at high-stress points for longevity</li>
+                        <li><strong>${data.uniqueFeatures?.pattern || 'Modern'} pattern</strong> with optimized cutting layout for zero-waste</li>
+                        <li><strong>${data.uniqueFeatures?.stitching || 'Premium'} construction</strong> at high-stress points for longevity</li>
+                        <li><strong>Detail work:</strong> ${data.uniqueFeatures?.details || 'Functional details'} for enhanced wearability</li>
+                        <li><strong>${data.uniqueFeatures?.finishing || 'Quality'} finishing</strong> for superior comfort and appearance</li>
                         <li>Timeless silhouette designed to transcend seasonal trends</li>
                         <li>Modular design allows for easy repair and component replacement</li>
                         <li>${data.colorImpact}</li>
@@ -376,11 +543,12 @@
                 </div>
 
                 <div class="design-specs">
-                    <h4>Production Specifications</h4>
+                    <h4>⚙️ Production Specifications</h4>
+                    <p><strong>Design Code:</strong> <code>${data.uniqueFeatures?.uniqueId || 'custom'}</code></p>
                     <p><strong>Estimated Production Time:</strong> ${Math.floor(Math.random() * 3) + 2} weeks</p>
-                    <p><strong>Manufacturing Method:</strong> Ethical small-batch production</p>
-                    <p><strong>Quality Standard:</strong> Commercial-grade construction</p>
-                    <p><strong>Care Instructions:</strong> Machine washable, tumble dry low</p>
+                    <p><strong>Manufacturing Method:</strong> Ethical small-batch production with ${data.uniqueFeatures?.stitching || 'quality'} standards</p>
+                    <p><strong>Quality Standard:</strong> Commercial-grade construction with ${data.uniqueFeatures?.finishing || 'premium'}</p>
+                    <p><strong>Care Instructions:</strong> Machine washable, tumble dry low, iron on ${data.materialWeight === 'heavy' ? 'medium' : 'low'} heat</p>
                 </div>
             `;
         }
@@ -707,6 +875,81 @@
                     border-left: 4px solid rgba(255, 255, 255, 0.5);
                 }
 
+                .design-header {
+                    border-bottom: 2px solid #e0e0e0;
+                    padding-bottom: 1rem;
+                    margin-bottom: 1.5rem;
+                }
+
+                .design-header h3 {
+                    margin: 0 0 0.5rem 0;
+                    color: #2c3e50;
+                }
+
+                .design-id {
+                    font-size: 0.9rem;
+                    color: #666;
+                }
+
+                .design-id code {
+                    background: #f4f4f4;
+                    padding: 0.2rem 0.5rem;
+                    border-radius: 4px;
+                    font-family: 'Courier New', monospace;
+                    color: #e74c3c;
+                }
+
+                .unique-features-section {
+                    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                    padding: 1.5rem;
+                    border-radius: 12px;
+                    margin: 1.5rem 0;
+                    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+                }
+
+                .unique-features-section h4 {
+                    color: white;
+                    margin-bottom: 1.2rem;
+                    font-size: 1.3rem;
+                }
+
+                .feature-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 1rem;
+                }
+
+                .feature-item {
+                    background: rgba(255, 255, 255, 0.95);
+                    padding: 1rem;
+                    border-radius: 8px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }
+
+                .feature-item:hover {
+                    transform: translateY(-4px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                }
+
+                .feature-label {
+                    font-size: 0.85rem;
+                    color: #7f8c8d;
+                    font-weight: 500;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+                .feature-value {
+                    font-size: 1rem;
+                    color: #2c3e50;
+                    font-weight: 600;
+                    line-height: 1.4;
+                }
+
                 @media (max-width: 768px) {
                     .design-showcase {
                         grid-template-columns: 1fr;
@@ -718,6 +961,10 @@
 
                     .design-svg {
                         max-width: 250px;
+                    }
+
+                    .feature-grid {
+                        grid-template-columns: 1fr;
                     }
                 }
             </style>
