@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/animations.css">
+    <!-- TensorFlow.js for Real AI Models -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -19,7 +21,6 @@
                 <a href="../index.html" class="nav-link">Home</a>
                 <a href="generate-design.html" class="nav-link active">Generate Design</a>
                 <a href="sustainability-score.html" class="nav-link">Sustainability Score</a>
-                <a href="realtime-ai-demo.html" class="nav-link">Real-Time AI</a>
             </div>
             <div class="nav-actions">
                 <div class="weather-widget" id="weather-widget">
@@ -146,14 +147,23 @@
 
     <script src="../js/main.js"></script>
     <script src="../js/weather.js"></script>
+    <script src="../js/ai-models.js"></script>
     <script>
+        let isAIReady = false;
+
+        // Wait for AI models to be ready
+        window.addEventListener('ai-models-ready', () => {
+            isAIReady = true;
+            console.log('✅ AI models ready for design generation');
+        });
+
         // Design generation functionality
         document.getElementById('design-form').addEventListener('submit', function(e) {
             e.preventDefault();
             generateDesign();
         });
 
-        function generateDesign() {
+        async function generateDesign() {
             const form = document.getElementById('design-form');
             const resultDiv = document.getElementById('design-result');
             const generateBtn = document.getElementById('generate-btn');
@@ -161,7 +171,7 @@
             // Get form values
             const clothingType = document.getElementById('clothing-type').value;
             const material = document.getElementById('material').value;
-            const colorPreference = document.getElementById('color-preference').value;
+            const colorPreference = document.getElementById('color-preference').value || 'natural';
             const sizeRange = document.getElementById('size-range').value;
             
             if (!clothingType || !material) {
@@ -172,19 +182,76 @@
             // Add loading state
             EcoFashionAI.addLoadingState(generateBtn, '🎨 Generate Sustainable Design');
             
-            // Simulate AI processing
-            setTimeout(() => {
-                const designData = createDesignData(clothingType, material, colorPreference, sizeRange);
+            try {
+                // Use AI model to generate design
+                const designParams = {
+                    clothingType: clothingType,
+                    material: material,
+                    primaryColor: getColorFromPreference(colorPreference),
+                    secondaryColor: getSecondaryColor(colorPreference),
+                    size: sizeRange,
+                    season: getCurrentSeason()
+                };
+
+                // Generate design using real AI
+                let aiDesign = null;
+                if (isAIReady && window.aiModels) {
+                    aiDesign = await window.aiModels.generateDesign(designParams, { streaming: true });
+                }
+
+                // Create enhanced design data with AI features
+                const designData = await createEnhancedDesignData(
+                    clothingType, 
+                    material, 
+                    colorPreference, 
+                    sizeRange,
+                    aiDesign
+                );
+                
                 displayDesign(designData);
                 resultDiv.style.display = 'block';
                 resultDiv.scrollIntoView({ behavior: 'smooth' });
                 
                 EcoFashionAI.removeLoadingState(generateBtn, '🎨 Generate Sustainable Design');
-                EcoFashionAI.showNotification('Sustainable design generated successfully!', 'success');
-            }, 2000);
+                EcoFashionAI.showNotification('✅ AI-powered sustainable design generated!', 'success');
+            } catch (error) {
+                console.error('Design generation error:', error);
+                EcoFashionAI.removeLoadingState(generateBtn, '🎨 Generate Sustainable Design');
+                EcoFashionAI.showNotification('Error generating design. Please try again.', 'error');
+            }
         }
 
-        function createDesignData(type, material, color, size) {
+        function getColorFromPreference(preference) {
+            const colorMap = {
+                'earth-tones': 'brown',
+                'pastels': 'pastel-blue',
+                'vibrant': 'red',
+                'neutral': 'beige',
+                'natural': 'green'
+            };
+            return colorMap[preference] || 'green';
+        }
+
+        function getSecondaryColor(preference) {
+            const colorMap = {
+                'earth-tones': 'tan',
+                'pastels': 'pink',
+                'vibrant': 'yellow',
+                'neutral': 'white',
+                'natural': 'white'
+            };
+            return colorMap[preference] || 'white';
+        }
+
+        function getCurrentSeason() {
+            const month = new Date().getMonth();
+            if (month >= 2 && month <= 4) return 'spring';
+            if (month >= 5 && month <= 7) return 'summer';
+            if (month >= 8 && month <= 10) return 'fall';
+            return 'winter';
+        }
+
+        async function createEnhancedDesignData(type, material, color, size, aiDesign) {
             const designs = {
                 't-shirt': '👕',
                 'dress': '👗',
@@ -247,12 +314,28 @@
                 </div>
             `;
 
+            // Build AI features section if available
+            let aiFeaturesHtml = '';
+            if (data.aiFeatures && data.aiFeatures.description) {
+                aiFeaturesHtml = `
+                    <div class="ai-generated-section">
+                        <h4>🤖 AI-Generated Design Insights</h4>
+                        <p class="ai-description">${data.aiFeatures.description}</p>
+                        ${data.aiFeatures.fit ? `<p><strong>Fit:</strong> ${data.aiFeatures.fit}</p>` : ''}
+                        ${data.aiFeatures.colorCombination ? `<p><strong>Color Palette:</strong> ${data.aiFeatures.colorCombination}</p>` : ''}
+                        ${data.aiFeatures.constructionNotes ? `<p><strong>Construction:</strong> ${data.aiFeatures.constructionNotes}</p>` : ''}
+                    </div>
+                `;
+            }
+
             detailsDiv.innerHTML = `
                 <h3>AI-Generated ${data.type} Design</h3>
                 <p class="design-description">
                     This AI-generated design uses <strong>${data.material}</strong> and incorporates 
                     sustainable design principles with advanced pattern engineering for minimal environmental impact.
                 </p>
+                
+                ${aiFeaturesHtml}
                 
                 <div class="impact-metrics">
                     <div class="metric">
@@ -593,6 +676,35 @@
                     line-height: 1.7;
                     color: #555;
                     margin-bottom: 1.5rem;
+                }
+
+                .ai-generated-section {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 1.5rem;
+                    border-radius: 12px;
+                    margin: 1.5rem 0;
+                    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                }
+
+                .ai-generated-section h4 {
+                    color: white;
+                    margin-bottom: 1rem;
+                    font-size: 1.3rem;
+                }
+
+                .ai-generated-section p {
+                    color: rgba(255, 255, 255, 0.95);
+                    line-height: 1.6;
+                    margin-bottom: 0.8rem;
+                }
+
+                .ai-description {
+                    font-style: italic;
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 1rem;
+                    border-radius: 8px;
+                    border-left: 4px solid rgba(255, 255, 255, 0.5);
                 }
 
                 @media (max-width: 768px) {

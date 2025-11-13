@@ -1,34 +1,24 @@
 # Generative AI in Fashion Sustainability
 
-A comprehensive web application that uses **real-time AI models** powered by **TensorFlow.js** to revolutionize fashion sustainability through design generation and sustainability scoring with live predictions and streaming responses.
+A comprehensive web application that uses **AI models** powered by **TensorFlow.js** to revolutionize fashion sustainability through design generation and sustainability scoring.
 
-## 🤖 **Real-Time AI Models**
+## 🤖 **AI Models**
 
-This project features **actual machine learning models** running in the browser with real-time capabilities:
+This project features **actual machine learning models** running in the browser:
 
-### **1. Sustainability Prediction Model (Real-Time)**
+### **1. Sustainability Prediction Model**
 
 - **Type**: Feedforward Neural Network
 - **Architecture**: 7 inputs → 64 → 32 → 16 → 1 output
-- **Training**: 1000 synthetic samples, 50 epochs with live progress tracking
+- **Training**: 1000 synthetic samples, 50 epochs
 - **Features**: Material type, recyclability, carbon, water, durability, organic status, production method
 - **Accuracy**: 85-95% confidence on predictions
-- **Real-Time Features**:
-  - Live training progress visualization
-  - Streaming predictions for batch analysis
-  - Prediction caching for performance
-  - Continuous learning with new data
-  - Model export/import capabilities
 
-### **2. Design Generation (Real-Time Streaming)**
+### **2. Design Generation**
 
 - **Integration**: Hugging Face API (GPT-2)
 - **Fallback**: Enhanced local generation with TensorFlow.js
 - **Features**: AI-powered design descriptions and material recommendations
-- **Real-Time Features**:
-  - Progressive design generation with status updates
-  - Streaming responses with intermediate results
-  - Live progress tracking
 
 ## 🚀 Quick Deploy
 
@@ -50,7 +40,7 @@ This project features **actual machine learning models** running in the browser 
 
 - Generate eco-friendly fashion designs using AI
 - Select clothing type, materials, colors, and sizing
-- Real-time sustainability scoring
+- AI-powered sustainability scoring
 - Material impact analysis
 - Zero-waste design principles
 
@@ -64,29 +54,15 @@ This project features **actual machine learning models** running in the browser 
 
 ### 4. **Weather Integration**
 
-- Real-time weather display
+- Weather display
 - Weather-based fashion recommendations
 - Climate-appropriate material suggestions
 - Seasonal styling advice
-
-### 5. **Real-Time AI Demo** ⚡ **NEW**
-
-- Live AI model training visualization
-- Real-time prediction streaming
-- Model performance metrics dashboard
-- Interactive model controls (retrain, export, cache management)
-- Progressive design generation with status updates
-- Training progress tracking with epoch-by-epoch updates
 
 ## 🛠️ Technology Stack
 
 - **Frontend**: HTML5, CSS3, JavaScript (ES6+)
 - **AI/ML**: TensorFlow.js 4.11.0 (Browser-based machine learning)
-- **Real-Time Features**: 
-  - Event-driven architecture with CustomEvents
-  - Async generators for streaming
-  - IndexedDB for model persistence
-  - Prediction caching with Map data structures
 - **Styling**: Custom CSS with animations, Poppins font
 - **Icons**: Unicode emojis for universal compatibility
 - **APIs**: OpenWeatherMap (configurable), Hugging Face (optional)
@@ -105,8 +81,7 @@ Mini_project/
 │   └── weather.js           # Weather API integration
 ├── pages/
 │   ├── generate-design.html  # AI design generation
-│   ├── sustainability-score.html # Sustainability analysis
-│   └── realtime-ai-demo.html # Real-time AI demonstration
+│   └── sustainability-score.html # Sustainability analysis
 ├── images/                   # Image assets (placeholder)
 ├── .github/
 │   └── copilot-instructions.md

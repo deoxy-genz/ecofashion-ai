@@ -1,5 +1,5 @@
-// Real-Time AI Models using TensorFlow.js and Hugging Face
-// This file contains actual machine learning implementations with real-time capabilities
+// AI Models using TensorFlow.js and Hugging Face
+// This file contains actual machine learning implementations
 
 class AIModelManager {
     constructor() {
@@ -10,11 +10,6 @@ class AIModelManager {
         this.isInitialized = false;
         this.hfApiKey = null; // Set via settings
         this.trainingHistory = [];
-        this.realtimeCallbacks = new Map(); // For real-time updates
-        this.modelCache = new Map(); // Cache predictions
-        this.isTraining = false;
-        this.currentEpoch = 0;
-        this.totalEpochs = 0;
     }
 
     // Initialize all AI models
@@ -40,8 +35,6 @@ class AIModelManager {
     // Load sustainability scoring model (Simple Neural Network)
     async loadSustainabilityModel() {
         console.log('Loading sustainability prediction model...');
-        this.isTraining = true;
-        this.totalEpochs = 50;
         
         // Create a simple feedforward neural network
         const model = tf.sequential({
@@ -63,17 +56,14 @@ class AIModelManager {
         // Generate synthetic training data for sustainability scoring
         const trainingData = this.generateSustainabilityTrainingData(1000);
         
-        // Train the model with real-time callbacks
+        // Train the model
         await model.fit(trainingData.inputs, trainingData.labels, {
-            epochs: this.totalEpochs,
+            epochs: 50,
             batchSize: 32,
             validationSplit: 0.2,
             verbose: 0,
             callbacks: {
                 onEpochEnd: (epoch, logs) => {
-                    this.currentEpoch = epoch + 1;
-                    const progress = ((epoch + 1) / this.totalEpochs) * 100;
-                    
                     // Store training history
                     this.trainingHistory.push({
                         epoch: epoch + 1,
@@ -83,25 +73,12 @@ class AIModelManager {
                         timestamp: Date.now()
                     });
                     
-                    // Emit real-time training progress
-                    this.emitTrainingProgress({
-                        model: 'sustainability',
-                        epoch: epoch + 1,
-                        totalEpochs: this.totalEpochs,
-                        progress: Math.round(progress),
-                        loss: logs.loss.toFixed(4),
-                        valLoss: logs.val_loss?.toFixed(4),
-                        mae: logs.mae.toFixed(4)
-                    });
-                    
                     if (epoch % 10 === 0) {
-                        console.log(`Epoch ${epoch + 1}/${this.totalEpochs}: loss = ${logs.loss.toFixed(4)}, val_loss = ${logs.val_loss?.toFixed(4)}`);
+                        console.log(`Epoch ${epoch + 1}/50: loss = ${logs.loss.toFixed(4)}, val_loss = ${logs.val_loss?.toFixed(4)}`);
                     }
                 },
                 onTrainEnd: () => {
-                    this.isTraining = false;
                     console.log('✅ Sustainability model training complete');
-                    this.emitTrainingComplete('sustainability');
                 }
             }
         });
@@ -161,67 +138,10 @@ class AIModelManager {
         }
     }
 
-    // Real-time event emitters
-    emitTrainingProgress(data) {
-        window.dispatchEvent(new CustomEvent('ai-training-progress', { detail: data }));
-        this.realtimeCallbacks.forEach((callback, id) => {
-            if (callback.type === 'training') {
-                callback.fn(data);
-            }
-        });
-    }
-
-    emitTrainingComplete(modelName) {
-        window.dispatchEvent(new CustomEvent('ai-training-complete', { detail: { model: modelName } }));
-    }
-
-    emitPredictionUpdate(data) {
-        window.dispatchEvent(new CustomEvent('ai-prediction-update', { detail: data }));
-        this.realtimeCallbacks.forEach((callback, id) => {
-            if (callback.type === 'prediction') {
-                callback.fn(data);
-            }
-        });
-    }
-
-    // Subscribe to real-time updates
-    subscribe(type, callback) {
-        const id = Date.now() + Math.random();
-        this.realtimeCallbacks.set(id, { type, fn: callback });
-        return id; // Return subscription ID for unsubscribing
-    }
-
-    // Unsubscribe from updates
-    unsubscribe(id) {
-        this.realtimeCallbacks.delete(id);
-    }
-
-    // Get training status
-    getTrainingStatus() {
-        return {
-            isTraining: this.isTraining,
-            currentEpoch: this.currentEpoch,
-            totalEpochs: this.totalEpochs,
-            progress: this.totalEpochs > 0 ? (this.currentEpoch / this.totalEpochs) * 100 : 0,
-            history: this.trainingHistory.slice(-10) // Last 10 epochs
-        };
-    }
-
-    // Real-time sustainability scoring using trained model
-    async predictSustainabilityScore(itemData, options = {}) {
+    // Sustainability scoring using trained model
+    async predictSustainabilityScore(itemData) {
         if (!this.models.sustainabilityPredictor) {
             throw new Error('Sustainability model not loaded');
-        }
-
-        const { realtime = false, cacheKey = null } = options;
-
-        // Check cache first
-        if (cacheKey && this.modelCache.has(cacheKey)) {
-            const cached = this.modelCache.get(cacheKey);
-            if (Date.now() - cached.timestamp < 60000) { // Cache for 1 minute
-                console.log('📦 Using cached prediction');
-                return cached.result;
-            }
         }
 
         // Extract and normalize features
@@ -246,35 +166,10 @@ class AIModelManager {
             recyclability: metrics.recyclability,
             recommendations: metrics.recommendations,
             confidence: 0.85 + Math.random() * 0.10, // 85-95% confidence
-            timestamp: Date.now(),
-            realtime: realtime
+            timestamp: Date.now()
         };
-
-        // Cache the result
-        if (cacheKey) {
-            this.modelCache.set(cacheKey, { result, timestamp: Date.now() });
-        }
-
-        // Emit real-time update if requested
-        if (realtime) {
-            this.emitPredictionUpdate({
-                type: 'sustainability',
-                itemData,
-                result
-            });
-        }
         
         return result;
-    }
-
-    // Stream predictions for multiple items in real-time
-    async *streamPredictions(items) {
-        for (const item of items) {
-            const result = await this.predictSustainabilityScore(item, { realtime: true });
-            yield result;
-            // Small delay to simulate real-time streaming
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
     }
 
     // Extract features from item data for ML model
@@ -587,61 +482,6 @@ class AIModelManager {
         console.log('✅ Hugging Face API key saved');
     }
 
-    // Real-time design generation with streaming updates
-    async *streamDesignGeneration(designParams) {
-        yield { status: 'initializing', progress: 0, message: 'Starting AI design generation...' };
-        
-        yield { status: 'analyzing', progress: 20, message: 'Analyzing material properties...' };
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        yield { status: 'generating', progress: 40, message: 'Generating sustainable patterns...' };
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        yield { status: 'calculating', progress: 60, message: 'Calculating sustainability metrics...' };
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        yield { status: 'finalizing', progress: 80, message: 'Finalizing design specifications...' };
-        const design = await this.generateDesign(designParams);
-        
-        yield { status: 'complete', progress: 100, message: 'Design complete!', design };
-    }
-
-    // Continuous learning - retrain model with new data
-    async retrainModel(newData) {
-        if (!this.models.sustainabilityPredictor) {
-            throw new Error('Model not initialized');
-        }
-
-        console.log('🔄 Retraining model with new data...');
-        this.isTraining = true;
-
-        // Combine old and new training data
-        const combinedData = this.generateSustainabilityTrainingData(800);
-        // Add user-provided data
-        // (In production, you would process and validate newData here)
-
-        await this.models.sustainabilityPredictor.fit(combinedData.inputs, combinedData.labels, {
-            epochs: 10,
-            batchSize: 16,
-            verbose: 0,
-            callbacks: {
-                onEpochEnd: (epoch, logs) => {
-                    this.emitTrainingProgress({
-                        model: 'sustainability-retrain',
-                        epoch: epoch + 1,
-                        totalEpochs: 10,
-                        progress: ((epoch + 1) / 10) * 100,
-                        loss: logs.loss.toFixed(4)
-                    });
-                }
-            }
-        });
-
-        this.isTraining = false;
-        console.log('✅ Model retrained successfully');
-        return true;
-    }
-
     // Get model performance metrics
     getModelMetrics() {
         if (this.trainingHistory.length === 0) {
@@ -659,12 +499,6 @@ class AIModelManager {
             lastUpdated: latestMetrics.timestamp,
             modelAccuracy: Math.max(0, (1 - avgLoss) * 100).toFixed(2) + '%'
         };
-    }
-
-    // Clear prediction cache
-    clearCache() {
-        this.modelCache.clear();
-        console.log('🗑️ Prediction cache cleared');
     }
 
     // Export model for later use
