@@ -2,10 +2,8 @@
   "version": "1.0.1",
   "releaseDate": "2025-10-12",
   "features": [
-    "Real-time weather integration",
+    "Weather integration",
     "Offline data storage",
-    "Auto-save form data",
-    "Performance monitoring",
     "Network status indicator"
   ],
   "improvements": [

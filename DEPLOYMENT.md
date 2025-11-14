@@ -1,6 +1,6 @@
 # 🚀 Deployment Guide - EcoFashion AI
 
-This guide will help you deploy your EcoFashion AI application to various platforms and make it fully functional in real-time.
+This guide will help you deploy your EcoFashion AI application to various platforms and make it fully functional.
 
 ## 📋 Prerequisites
 
@@ -47,7 +47,7 @@ If you don't want to install Node.js:
 2. Or use Python: `python -m http.server 3000`
 3. Or use any other local web server
 
-## 🌐 Real-Time Features Setup
+## 🌐 Features Setup
 
 ### 1. Weather Integration
 
